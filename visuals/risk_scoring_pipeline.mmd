@@ -1,0 +1,16 @@
+%%{init: {'theme':'dark','themeVariables': {'background':'#06142B','primaryColor':'#0B2547','primaryTextColor':'#EAF6FF','primaryBorderColor':'#38D9FF','lineColor':'#38D9FF','secondaryColor':'#0D315D','tertiaryColor':'#102E55','fontFamily':'Aptos'}}}%%
+flowchart LR
+  A[Source Signals] --> B[Feature Rules]
+  B --> C{Risk Components}
+  C --> C1[Report Frequency 30%]
+  C --> C2[Blacklist Link 20%]
+  C --> C3[Suspicious Transaction 20%]
+  C --> C4[Domain / APK Link 15%]
+  C --> C5[Fast Fund Movement 15%]
+  C1 --> D[Score Cap 100]
+  C2 --> D
+  C3 --> D
+  C4 --> D
+  C5 --> D
+  D --> E[Risk Level]
+  E --> F[Explanation + Review Status]

@@ -1,0 +1,14 @@
+%%{init: {'theme':'dark','themeVariables': {'background':'#06142B','primaryColor':'#0B2547','primaryTextColor':'#EAF6FF','primaryBorderColor':'#38D9FF','lineColor':'#38D9FF','secondaryColor':'#0D315D','tertiaryColor':'#102E55','fontFamily':'Aptos'}}}%%
+flowchart LR
+  R[Report Text] --> X[Extract URL / WA / Account / APK / Keyword]
+  C[Crawler Finding] --> X
+  T[Transaction Indicator] --> X
+  X --> N[Normalize + Mask Sensitive Fields]
+  N --> D[Deduplicate Entity]
+  D --> G[Create Node + Relationship]
+  G --> S[(Graph Storage)]
+  S --> A[Search Path]
+  S --> V[Cluster + Centrality]
+  A --> O[Evidence Path]
+  V --> O
+  O --> H[Human Review]

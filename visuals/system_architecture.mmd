@@ -1,0 +1,38 @@
+%%{init: {'theme':'dark','themeVariables': {'background':'#06142B','primaryColor':'#0B2547','primaryTextColor':'#EAF6FF','primaryBorderColor':'#38D9FF','lineColor':'#38D9FF','secondaryColor':'#0D315D','tertiaryColor':'#102E55','fontFamily':'Aptos'}}}%%
+flowchart LR
+  subgraph Input["Input & Signals"]
+    A[Public Reports]
+    B[Legal Crawler Findings]
+    C[Traffic Simulation]
+    D[Transaction Indicators]
+    E[Blacklist Dummy]
+  end
+  subgraph Processing["Ingestion & Processing"]
+    F[Validation]
+    G[Entity Extraction]
+    H[Normalization + Dedup]
+    I[Graph Builder]
+  end
+  subgraph Intelligence["SATPAM Intelligence Core"]
+    J[(Neo4j Graph DB)]
+    K[A* / BFS / UCS / BDS]
+    L[Rule-based Risk Scoring]
+    M[Early Warning]
+    N[Explainability Engine]
+  end
+  subgraph Output["Dashboard & Governance"]
+    O[Graph Explorer]
+    P[Priority Queue]
+    Q[Human Verification]
+    R[Audit + Export]
+  end
+  A --> F
+  B --> F
+  C --> F
+  D --> F
+  E --> F
+  F --> G --> H --> I --> J
+  J --> K --> L --> M --> N
+  N --> O
+  N --> P
+  P --> Q --> R
