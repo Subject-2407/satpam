@@ -226,7 +226,7 @@ flowchart LR
   end
   subgraph Intelligence["SATPAM Intelligence Core"]
     J[(Neo4j Graph DB)]
-    K[A* / BFS / UCS / BDS]
+    K[BFS Core / A* Optional]
     L[Rule-based Risk Scoring]
     M[Early Warning]
     N[Explainability Engine]
@@ -621,7 +621,7 @@ def slide_4(prs):
     questions = [
         (0.85, 2.05, "1", "Bagaimana merancang graph ekosistem judol-pinjol?", CYAN),
         (8.95, 2.05, "2", "Bagaimana menghubungkan laporan, domain, rekening, APK, dan blacklist?", MINT),
-        (0.85, 4.45, "3", "Bagaimana A* dan BFS menemukan jalur risiko?", AMBER),
+        (0.85, 4.45, "3", "Bagaimana BFS menampilkan evidence path?", AMBER),
         (8.95, 4.45, "4", "Bagaimana skor risiko dan prioritas dihitung?", RED),
         (4.1, 5.55, "5", "Bagaimana hasil AI tetap explainable dan diverifikasi manusia?", CYAN),
     ]
@@ -644,7 +644,7 @@ def slide_5(prs):
         (0.78, 2.45, "Input\nmulti-sumber", "public_report", MINT),
         (2.72, 2.45, "Entity\nextraction", "ai_analysis", CYAN),
         (4.66, 2.45, "Graph\nintelligence", "web_crawler", AMBER),
-        (6.6, 2.45, "A* search\n+ scoring", "risk_score", RED),
+        (6.6, 2.45, "Graph search\n+ scoring", "risk_score", RED),
         (8.54, 2.45, "Dashboard\nprioritas", "dashboard", CYAN),
         (10.48, 2.45, "Human\nverification", "law_enforcement_action", MINT),
     ]
@@ -687,7 +687,7 @@ def slide_6(prs):
         (4.16, "Normalize\n+ Dedup"),
         (5.5, "Graph\nBuilder"),
         (6.84, "Neo4j\nGraph DB"),
-        (8.18, "A*/BFS\nUCS/BDS"),
+        (8.18, "BFS/Rules\nA* optional"),
         (9.52, "Risk\nScoring"),
         (10.86, "Explain\n+ Alert"),
     ]
@@ -719,11 +719,11 @@ def slide_7(prs):
     add_title(slide, "Method / Workflow", "Pipeline metode berjalan dari data dummy sampai rekomendasi prioritas.", "Metode menggabungkan graph database, AI search, rule-based risk scoring, dan review manusia.")
 
     steps = [
-        ("1", "Input\nData", "laporan, crawler,\ntransaksi simulasi", MINT),
+        ("1", "Input +\nValidate", "laporan, crawler,\ntransaksi simulasi", MINT),
         ("2", "Extract", "URL, domain,\nWA, rekening, APK", CYAN),
         ("3", "Normalize", "masking,\ndedup entity", AMBER),
         ("4", "Build\nGraph", "node +\nrelationship", CYAN),
-        ("5", "Search", "A*, BFS,\nUCS, BDS", RED),
+        ("5", "Search", "BFS path,\nA* optional", RED),
         ("6", "Score", "rule-based\nrisk score", AMBER),
         ("7", "Explain\nReview", "path bukti +\nhuman approval", MINT),
     ]
@@ -782,7 +782,7 @@ def slide_8(prs):
     add_text(slide, 10.18, 2.25, 2.05, 0.58, "Inovasi inti", size=22, color=CYAN, bold=True, font=TITLE_FONT, align=PP_ALIGN.CENTER)
     bullets = [
         "Graph intelligence lintas entitas",
-        "A* risk path untuk prioritas",
+        "Search-based risk path",
         "Judol-pinjol linkage detection",
         "Rule score yang bisa dijelaskan",
         "Human verification by design",
@@ -818,7 +818,7 @@ def slide_9(prs):
     roadmap = [
         ("F1", "Foundation", "schema, Docker, seed", 1.0, MINT),
         ("F2", "Data + Graph", "extract, normalize, Neo4j", 1.0, CYAN),
-        ("F3", "Search + Scoring", "A*, BFS, rules, alert", 1.0, AMBER),
+        ("F3", "Search + Scoring", "BFS, rules, opt. A*", 1.0, AMBER),
         ("F4", "Dashboard + Review", "graph explorer, cases", 1.0, RED),
         ("F5", "Testing + Demo", "pytest, UI smoke, script", 0.7, MINT),
     ]

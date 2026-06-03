@@ -38,7 +38,7 @@
 
 **Proof object:** SATPAM solution flow.
 
-**On-slide text:** input multi-sumber -> ekstraksi entitas -> graph intelligence -> A* search + scoring -> dashboard + human review.
+**On-slide text:** input multi-sumber -> ekstraksi entitas -> graph intelligence -> graph search + rule scoring -> dashboard + human review.
 
 ## 6. System Architecture
 
@@ -54,7 +54,7 @@
 
 **Proof object:** Method pipeline.
 
-**On-slide text:** validasi -> normalisasi -> dedup -> graph build -> A*/BFS/UCS/BDS -> rule score -> explanation -> review.
+**On-slide text:** validasi -> ekstraksi -> normalisasi -> dedup -> graph build -> BFS evidence path + optional A*/UCS/BDS -> rule score -> explanation -> review.
 
 ## 8. Innovation / Novelty
 
@@ -62,7 +62,7 @@
 
 **Proof object:** Innovation matrix.
 
-**On-slide text:** graph intelligence, search-based risk path, judol-pinjol linkage, early warning, explainable detection.
+**On-slide text:** graph intelligence, search-based risk path, judol-pinjol linkage, early warning, explainable detection, human verification.
 
 ## 9. Benefits and Implementation Roadmap
 

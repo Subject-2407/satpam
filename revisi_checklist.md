@@ -89,7 +89,7 @@
 - [ ] Lima pertanyaan problem map tercantum:
   1. [ ] "Bagaimana merancang sistem AI berbasis graph search untuk ekosistem judol-pinjol ilegal?"
   2. [ ] "Bagaimana menghubungkan laporan, domain, nomor, rekening, APK, crawler, transaksi, blacklist ke satu graph?"
-  3. [ ] "Bagaimana menerapkan algoritma searching (BFS, UCS, Bi-Directional, A*) untuk menemukan jalur risiko?"
+  3. [ ] "Bagaimana menerapkan BFS evidence path dengan UCS, Bi-Directional, dan A* sebagai opsi lanjutan untuk menemukan jalur risiko?"
   4. [ ] "Bagaimana menghitung skor risiko dan prioritas tindakan?"
   5. [ ] "Bagaimana menjelaskan hasil dalam bentuk path bukti?"
 - [ ] Visualisasi problem map menunjukkan interkoneksi
@@ -113,13 +113,13 @@
 - [ ] SATPAM solution flow diagram menampilkan:
   - [ ] Input multi-sumber:
     - [ ] Laporan masyarakat
-    - [ ] Crawler/scraper publik
+    - [ ] Crawler finding dummy/simulasi atau crawler publik legal berizin
     - [ ] Indikator transaksi simulasi
     - [ ] Blacklist dummy
     - [ ] Data APK simulasi
   - [ ] Entity extraction (URL, domain, nomor, rekening, keyword, QRIS, e-wallet, APK)
   - [ ] Graph building & normalization
-  - [ ] AI search + scoring
+  - [ ] Graph search + rule-based scoring
   - [ ] Dashboard + human review
 - [ ] Output: "blacklist candidate, bukan blokir otomatis"
 
@@ -156,7 +156,7 @@
     - [ ] Graph builder
   - [ ] **Lapisan 3 - Intelligence Core:**
     - [ ] Neo4j (graph database)
-    - [ ] Search engine (A*, BFS, UCS, BDS)
+    - [ ] Search engine (BFS + rule scoring sebagai core; A*/UCS/BDS optional)
     - [ ] Risk scoring engine
     - [ ] Early warning
     - [ ] Explanation engine
@@ -177,7 +177,7 @@
 - [ ] Architecture diagram dengan layering visual yang jelas
 - [ ] Boxes untuk komponen, dengan labels dan warna berbeda per lapisan
 - [ ] Arrows menunjukkan data flow
-- [ ] Tech stack labels (e.g., "Neo4j", "A* Algorithm")
+- [ ] Tech stack labels (e.g., "Neo4j", "BFS Evidence Path", "Rule-Based Scoring")
 
 ---
 
@@ -192,10 +192,11 @@
   4. [ ] Deduplication
   5. [ ] Graph builder (node & relationship)
   6. [ ] Algorithm search:
-     - [ ] BFS: koneksi terdekat
-     - [ ] A*: prioritas jalur risiko
-     - [ ] UCS: cost investigasi
-     - [ ] Bi-Directional Search: titik temu dengan blacklist lama
+     - [ ] BFS: koneksi terdekat dan evidence path utama
+     - [ ] Rule-based scoring: prioritas risiko utama
+     - [ ] A*: optional/advanced jika heuristic terdokumentasi
+     - [ ] UCS: optional untuk cost investigasi
+     - [ ] Bi-Directional Search: optional untuk titik temu dengan blacklist lama
   7. [ ] Output: risk score, explanation, early warning, dashboard, review manusia
 
 ### Speaker Notes
@@ -255,7 +256,7 @@
   4. [ ] Dashboard & Verification
   5. [ ] Testing & Demo
 
-- [ ] Timeline jelas untuk setiap fase
+- [ ] Timeline jelas untuk setiap fase (SRS: F1-F4 masing-masing 1-2 minggu, F5 1 minggu)
 - [ ] Positioning: "Kompetitif secara teknologi, tidak overclaim"
 - [ ] Catatan: "Semua data pada prototype adalah dummy, sistem tidak melakukan auto-blocking"
 

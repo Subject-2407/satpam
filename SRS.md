@@ -29,7 +29,7 @@ Sistem Graph Intelligence untuk Deteksi, Pemetaan, dan Prioritisasi Risiko Ekosi
 
 SATPAM adalah sistem AI berbasis graph intelligence yang dirancang untuk membantu mendeteksi, memetakan, menjelaskan, dan memprioritaskan risiko dari ekosistem judi online (judol) dan pinjaman online (pinjol) ilegal. Sistem ini memandang masalah judol-pinjol ilegal sebagai jaringan entitas yang saling terhubung, bukan sebagai kasus tunggal.
 
-Dalam prototype awal, SATPAM akan menggunakan data dummy dari berbagai sumber simulasi, seperti laporan masyarakat, domain/URL, akun promosi, nomor WhatsApp, rekening bank, e-wallet, QRIS, APK, keyword, transaksi simulasi, dan blacklist dummy. Data tersebut akan dibentuk menjadi graph, dianalisis menggunakan algoritma search terutama A* Search, diberi skor risiko secara rule-based, lalu divisualisasikan dalam dashboard.
+Dalam prototype awal, SATPAM akan menggunakan data dummy dari berbagai sumber simulasi, seperti laporan masyarakat, domain/URL, akun promosi, nomor WhatsApp, rekening bank, e-wallet, QRIS, APK, keyword, transaksi simulasi, dan blacklist dummy. Data tersebut akan dibentuk menjadi graph, dianalisis menggunakan BFS untuk evidence path dan rule-based risk scoring untuk prioritas, lalu divisualisasikan dalam dashboard. A* Search, UCS/Dijkstra, dan Bi-Directional Search dapat diposisikan sebagai metode tambahan jika bobot edge dan heuristic sudah terdokumentasi.
 
 Output utama sistem bukan vonis hukum, melainkan indikasi risiko yang explainable. SATPAM harus mampu menjawab pertanyaan seperti:
 
@@ -81,8 +81,8 @@ Berdasarkan keputusan awal pengguna, scope SATPAM adalah sebagai berikut:
 | Jenis data | Data dummy untuk semua entitas |
 | Entitas graph | Semua entitas utama dimasukkan |
 | Output | Deteksi risiko, jalur hubungan, path bukti, prioritas tindakan, cluster, early warning, rekomendasi |
-| Algoritma utama | A* Search |
-| Algoritma pendukung | BFS, DFS/DLS/IDS, UCS/Dijkstra, Bi-Directional Search, centrality, community detection |
+| Metode analitik utama | Graph modeling, BFS evidence path, rule-based risk scoring |
+| Algoritma pendukung/opsional | UCS/Dijkstra, Bi-Directional Search, A* Search, degree centrality sederhana, rule-based cluster |
 | Risk scoring | Rule-based pada tahap prototype |
 | Early warning | Wajib ada |
 | Traffic dan crawler intelligence | Wajib ada dalam bentuk simulasi log trafik dan simulasi hasil crawler/scraper |
@@ -108,7 +108,7 @@ Prototype SATPAM harus membuktikan bahwa:
 - Data dummy dari berbagai sumber dapat digabungkan menjadi graph risiko.
 - Sistem dapat mengekstrak entitas dari laporan sederhana.
 - Sistem dapat membuat node dan relationship secara konsisten.
-- Sistem dapat menelusuri jalur risiko menggunakan A* dan algoritma pendukung.
+- Sistem dapat menelusuri jalur risiko menggunakan BFS evidence path, dengan A* sebagai opsi lanjutan.
 - Sistem dapat menghitung skor risiko secara rule-based.
 - Sistem dapat menjelaskan alasan risiko dengan path dan rule yang aktif.
 - Sistem dapat menampilkan graph, cluster, entity detail, dan rekomendasi di dashboard.
@@ -157,11 +157,12 @@ Prototype SATPAM mencakup:
 - Graph builder.
 - Penyimpanan graph di Neo4j.
 - Search engine berbasis graph.
-- A* Search sebagai algoritma utama untuk prioritisasi jalur risiko.
-- BFS untuk eksplorasi koneksi terdekat.
-- DFS/DLS/IDS untuk pencarian jalur dengan batas kedalaman.
-- UCS/Dijkstra untuk jalur dengan cost investigasi.
-- Bi-Directional Search untuk mencari titik temu antara laporan baru dan blacklist.
+- BFS sebagai algoritma utama untuk evidence path dan eksplorasi koneksi terdekat.
+- Rule-based path prioritization untuk menentukan jalur dan entitas prioritas.
+- UCS/Dijkstra sebagai metode opsional untuk jalur dengan cost investigasi.
+- Bi-Directional Search sebagai metode opsional untuk mencari titik temu antara laporan baru dan blacklist.
+- A* Search sebagai metode advanced jika heuristic dan bobot edge sudah terdokumentasi.
+- Degree centrality sederhana untuk membantu menemukan node prioritas.
 - Rule-based risk scoring.
 - Early warning detection.
 - Traffic and crawler intelligence berbasis data simulasi.
@@ -398,7 +399,7 @@ Input laporan/data dummy
 | Normalizer | Menyamakan format entitas |
 | Graph Builder | Membuat node dan relationship |
 | Graph Repository | Menyimpan dan mengambil data dari Neo4j |
-| Search Engine | Menjalankan A*, BFS, DFS/DLS/IDS, UCS, BDS |
+| Search Engine | Menjalankan BFS sebagai core, dengan A*/UCS/BDS sebagai opsi lanjutan |
 | Risk Scoring Engine | Menghitung skor entitas, path, cluster, dan laporan |
 | Early Warning Engine | Mendeteksi pola baru yang berisiko |
 | Traffic and Crawler Intelligence | Memproses log trafik simulasi dan hasil crawler/scraper dummy sebagai sinyal risiko |
@@ -623,10 +624,10 @@ Setiap relationship disarankan memiliki properti:
 
 | ID | Kebutuhan | Prioritas |
 |---|---|---|
-| FR-031 | Sistem harus menjalankan A* Search untuk mencari jalur risiko paling prioritas dari entitas awal ke target berisiko. | Must |
-| FR-032 | Sistem harus menjalankan BFS untuk menampilkan koneksi terdekat sampai kedalaman tertentu. | Must |
-| FR-033 | Sistem harus mendukung DFS atau DLS untuk eksplorasi jalur mendalam dengan batas kedalaman. | Should |
-| FR-034 | Sistem harus mendukung IDS untuk pencarian bertahap pada graph kecil. | Could |
+| FR-031 | Sistem harus menjalankan BFS untuk menampilkan evidence path dan koneksi terdekat sampai kedalaman tertentu. | Must |
+| FR-032 | Sistem harus menjalankan rule-based path prioritization berdasarkan risk score dan evidence path. | Must |
+| FR-033 | Sistem dapat mendukung A* Search sebagai metode advanced jika heuristic dan bobot edge sudah terdokumentasi. | Could |
+| FR-034 | Sistem dapat mendukung DFS/DLS/IDS untuk eksplorasi tambahan pada graph kecil. | Could |
 | FR-035 | Sistem harus mendukung UCS/Dijkstra untuk mencari jalur dengan cost investigasi paling rendah. | Should |
 | FR-036 | Sistem harus mendukung Bi-Directional Search untuk mencari titik temu antara laporan baru dan blacklist. | Should |
 | FR-037 | Sistem harus mengembalikan path dalam bentuk node, relationship, cost, risk score, dan explanation. | Must |
@@ -789,7 +790,7 @@ Setiap relationship disarankan memiliki properti:
 | Aktor | Analyst |
 | Tujuan | Mencari jalur risiko dari satu entitas |
 | Precondition | Entitas ada di graph |
-| Main Flow | Analyst memilih node, menjalankan A* atau BFS, sistem menampilkan path |
+| Main Flow | Analyst memilih node, menjalankan BFS evidence path atau metode opsional, sistem menampilkan path |
 | Output | Evidence path, risk score, explanation, rekomendasi |
 | Postcondition | Hasil analisis dapat disimpan |
 
@@ -863,7 +864,19 @@ Setiap relationship disarankan memiliki properti:
 
 ## 17. Algoritma dan Logika Analitik
 
-### 17.1 A* Search sebagai Algoritma Utama
+### 17.1 Metode Utama: BFS Evidence Path dan Rule-Based Scoring
+
+Pada tahap prototype, metode utama SATPAM adalah BFS untuk menelusuri evidence path dan rule-based risk scoring untuk menentukan prioritas. BFS digunakan karena mudah dijelaskan, cocok untuk graph kecil, dan langsung menunjukkan koneksi terdekat dari laporan atau entitas awal.
+
+Output utama dari metode ini adalah:
+
+- jalur bukti dari entitas awal ke entitas berisiko,
+- daftar node terdekat sampai batas depth tertentu,
+- skor risiko berbasis rule,
+- alasan risiko yang bisa dibaca analis,
+- status kandidat review yang tetap membutuhkan verifikasi manusia.
+
+### 17.2 A* Search sebagai Metode Opsional/Advanced
 
 A* Search digunakan untuk mencari jalur paling prioritas dari entitas awal ke entitas target berisiko. Formula umum:
 
@@ -892,11 +905,11 @@ Atau:
 priorityScore = accumulatedRisk + heuristicRisk
 ```
 
-Dengan catatan dokumentasi sistem harus jelas apakah implementasi memakai cost minimization atau risk maximization.
+Dengan catatan dokumentasi sistem harus jelas apakah implementasi memakai cost minimization atau risk maximization. Pada MVP, A* tidak menjadi syarat utama; A* dapat dipakai sebagai pembanding atau fitur lanjutan setelah heuristic tervalidasi.
 
-### 17.2 Heuristic A*
+### 17.3 Heuristic A*
 
-Contoh heuristic untuk prototype:
+Contoh heuristic untuk prototype. Bobot di bawah adalah konfigurasi rule demo, bukan model statistik/forensik final:
 
 | Indikator | Tambahan Risiko |
 |---|---:|
@@ -913,20 +926,18 @@ Contoh heuristic untuk prototype:
 | Crawler/scraper dummy menemukan redirect chain panjang | +15 |
 | Temuan crawler terhubung ke akun promosi dan nomor/rekening yang sama | +25 |
 
-### 17.3 Algoritma Pendukung
+### 17.4 Algoritma Pendukung
 
 | Algoritma | Fungsi |
 |---|---|
-| BFS | Menampilkan koneksi terdekat dari node awal sampai depth tertentu |
-| DFS | Menelusuri jalur mendalam untuk eksplorasi investigasi |
-| DLS | Membatasi DFS agar traversal tidak terlalu luas |
-| IDS | Mencari bertahap dari depth kecil ke besar |
-| UCS/Dijkstra | Mencari jalur dengan cost investigasi paling rendah |
-| Bi-Directional Search | Mencari titik temu antara laporan baru dan blacklist |
-| Degree Centrality | Mencari node dengan koneksi terbanyak |
+| BFS | Metode utama untuk evidence path dan koneksi terdekat dari node awal |
+| UCS/Dijkstra | Opsi untuk mencari jalur dengan cost investigasi paling rendah |
+| Bi-Directional Search | Opsi untuk mencari titik temu antara laporan baru dan blacklist |
+| A* Search | Opsi advanced untuk risk-prioritized path search jika heuristic tervalidasi |
+| Degree Centrality | Metode sederhana untuk mencari node dengan koneksi terbanyak |
 | Betweenness Centrality | Mencari node jembatan antar cluster, optional |
 | PageRank | Mencari node berpengaruh, optional |
-| Community Detection | Mengelompokkan node menjadi cluster |
+| Rule-based Cluster / Connected Component | Mengelompokkan node secara sederhana untuk prototype |
 
 ### 17.4 Batas Traversal Prototype
 
@@ -1323,7 +1334,7 @@ Halaman blacklist candidate harus menampilkan:
 | GET | /api/entities | Mencari entitas |
 | GET | /api/entities/{id} | Detail entitas |
 | GET | /api/graph/neighborhood | Mengambil graph sekitar node |
-| POST | /api/analysis/path-search | Menjalankan A*/BFS/dll |
+| POST | /api/analysis/path-search | Menjalankan BFS evidence path dan metode opsional |
 | GET | /api/risk/{entityId} | Mengambil risk assessment |
 | GET | /api/alerts | Mengambil early warning |
 | PATCH | /api/alerts/{id}/status | Update status alert |
@@ -1416,7 +1427,7 @@ Halaman blacklist candidate harus menampilkan:
 |---|---|
 | NFR-001 | Dashboard ringkasan harus tampil dalam waktu kurang dari 3 detik pada dataset prototype. |
 | NFR-002 | Query neighborhood graph depth 3 harus selesai dalam waktu kurang dari 5 detik pada dataset prototype. |
-| NFR-003 | Path search A* depth 5 harus selesai dalam waktu kurang dari 5 detik pada dataset prototype. |
+| NFR-003 | BFS evidence path depth 3 harus selesai dalam waktu kurang dari 5 detik pada dataset prototype; A* opsional depth 5 mengikuti batas yang sama jika diaktifkan. |
 | NFR-004 | Import dataset dummy awal harus selesai dalam waktu kurang dari 30 detik. |
 
 ### 23.2 Scalability
@@ -1600,7 +1611,7 @@ Prototype SATPAM dianggap berhasil jika memenuhi kriteria berikut:
 | AC-004 | Dashboard dapat menampilkan graph interaktif. |
 | AC-005 | User dapat memilih node dan melihat entity detail. |
 | AC-006 | Sistem dapat menjalankan BFS untuk neighborhood graph. |
-| AC-007 | Sistem dapat menjalankan A* untuk path prioritas risiko. |
+| AC-007 | Sistem dapat menampilkan evidence path dan prioritas risiko berbasis BFS + rule scoring. |
 | AC-008 | Sistem dapat menghitung risk score rule-based. |
 | AC-009 | Sistem dapat menjelaskan skor melalui rule yang aktif. |
 | AC-010 | Sistem dapat membuat early warning alert. |
@@ -1653,7 +1664,7 @@ Durasi estimasi: 1-2 minggu.
 Deliverable:
 
 - BFS neighborhood.
-- A* path risk.
+- Optional A* path risk jika heuristic terdokumentasi.
 - Rule-based risk scoring.
 - Explanation engine.
 - Early warning rules.
@@ -1816,8 +1827,8 @@ Output yang diharapkan:
 | Entity Extractor | URL, domain, nomor, rekening, APK, keyword |
 | Normalizer | URL, phone, account masking |
 | Risk Scoring | Rule aktif, bobot, score cap 100 |
-| A* Search | Path prioritas sesuai heuristic |
-| BFS | Neighborhood sesuai depth |
+| BFS Evidence Path | Neighborhood dan path sesuai depth |
+| Optional A* Search | Path prioritas sesuai heuristic jika fitur diaktifkan |
 | Early Warning | Alert muncul sesuai rule |
 | Traffic/Crawler Intelligence | Import event/finding dummy dan korelasi ke entitas |
 | Blacklist Candidate | Auto-flag kandidat dan larangan confirmed blacklist tanpa reviewer |
@@ -1886,6 +1897,6 @@ Pertanyaan berikut dapat diputuskan setelah SRS awal disetujui:
 
 SRS ini mendefinisikan SATPAM sebagai prototype kecil tetapi lengkap secara konsep: sistem gabungan web dashboard, API backend, graph database, search algorithm engine, risk scoring engine, early warning engine, dan human verification workflow.
 
-SATPAM difokuskan pada judol dan pinjol ilegal secara bersamaan, menggunakan data dummy, semua entitas utama, A* Search sebagai algoritma utama, algoritma pendukung untuk eksplorasi graph, scoring rule-based, dashboard visual, serta prinsip etika dan privasi yang ketat.
+SATPAM difokuskan pada judol dan pinjol ilegal secara bersamaan, menggunakan data dummy, semua entitas utama, BFS evidence path sebagai metode pencarian utama, scoring rule-based, A* Search/UCS/BDS sebagai opsi lanjutan, dashboard visual, serta prinsip etika dan privasi yang ketat.
 
 Target utama prototype bukan membuktikan bahwa sistem bisa langsung dipakai untuk penindakan nyata, melainkan menunjukkan bahwa pendekatan graph intelligence dapat membantu menyatukan data yang tersebar, menjelaskan hubungan antar entitas, menemukan jalur risiko, memunculkan peringatan awal, dan membantu manusia memprioritaskan verifikasi.

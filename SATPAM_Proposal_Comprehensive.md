@@ -241,7 +241,7 @@ Input SATPAM tidak harus hanya dari laporan masyarakat. Input dapat berasal dari
 Untuk tugas kuliah atau proposal, input yang paling aman adalah:
 
 ```text
-Laporan masyarakat + crawler sederhana + blacklist dummy + data transaksi simulasi
+Laporan masyarakat + crawler finding dummy/simulasi + blacklist dummy + data transaksi simulasi
 ```
 
 Untuk implementasi nyata, sistem dapat dikembangkan menjadi:
@@ -299,9 +299,9 @@ Laporan masyarakat + crawler publik + blacklist resmi + log trafik + data transa
 | **Entity Extraction Layer** | Mengekstrak URL, nomor HP, rekening, keyword, dan nama aplikasi |
 | **Graph Builder** | Membuat node dan relationship |
 | **Graph Database** | Menyimpan ekosistem dalam Neo4j |
-| **Search Algorithm Engine** | Menjalankan BFS, DFS, DLS, IDS, UCS, BDS, atau A* |
+| **Search Algorithm Engine** | Menjalankan BFS sebagai core, dengan UCS, BDS, atau A* sebagai opsi lanjutan |
 | **Risk Scoring Engine** | Menghitung skor risiko setiap node dan path |
-| **Graph Analytics Engine** | Menjalankan community detection dan centrality |
+| **Graph Analytics Engine** | Menjalankan rule-based cluster dan degree centrality sederhana |
 | **Explainability Layer** | Menampilkan alasan risiko dan jalur bukti |
 | **Dashboard** | Menampilkan graf, skor risiko, cluster, dan rekomendasi |
 
@@ -337,17 +337,17 @@ Neo4j Graph Data Science menyediakan berbagai algoritma path finding, termasuk *
 
 ### 11.2 Algoritma yang Paling Direkomendasikan
 
-Untuk SATPAM, algoritma utama yang paling kuat adalah:
+Untuk prototype SATPAM, metode utama yang paling realistis adalah:
 
-> **A\* Search**
+> **Graph modeling + BFS evidence path + rule-based risk scoring**
 
 Alasannya:
 
-- dapat menggunakan heuristic,
-- cocok untuk prioritas risiko,
-- cocok untuk pathfinding di graph,
-- bisa menghasilkan jalur yang explainable,
-- relevan dengan kasus deteksi ekosistem judol-pinjol.
+- BFS mudah dijelaskan untuk menelusuri hubungan terdekat,
+- rule-based risk scoring lebih transparan untuk prototype,
+- graph modeling tetap menunjukkan hubungan lintas entitas,
+- output bisa menghasilkan jalur bukti yang explainable,
+- A\* Search tetap dapat diposisikan sebagai metode tambahan jika heuristic dan bobot edge sudah terdokumentasi.
 
 ---
 
@@ -356,7 +356,7 @@ Alasannya:
 Deteksi aliran dana dalam SATPAM sebaiknya tidak hanya menggunakan satu algoritma. Sistem dapat menggabungkan beberapa pendekatan:
 
 ```text
-Graph Search + Risk Scoring + Community Detection + Centrality
+Graph Search + Rule-Based Risk Scoring + Degree Centrality Sederhana
 ```
 
 ### 12.1 Model Aliran Dana
@@ -374,13 +374,14 @@ Contoh:
 
 | Kebutuhan | Algoritma |
 |---|---|
-| Menelusuri uang dari korban | BFS / DFS / DLS |
-| Mencari jalur ke rekening blacklist | Bi-Directional Search |
-| Menentukan jalur paling prioritas | A\* Search |
+| Menelusuri uang dari korban | BFS |
+| Mencari jalur berbobot | UCS/Dijkstra, opsional |
+| Mencari titik temu dengan rekening blacklist | Bi-Directional Search, opsional |
+| Menentukan jalur paling prioritas | Rule-based Risk Scoring + BFS evidence path |
 | Menghitung risiko rekening | Rule-based Risk Scoring |
-| Menemukan kelompok rekening | Community Detection |
-| Mencari rekening pusat | Centrality Algorithm |
-| Mendeteksi transaksi tidak normal | Anomaly Detection |
+| Menemukan kelompok rekening | Rule-based cluster / connected component |
+| Mencari rekening pusat | Degree Centrality sederhana |
+| Mendeteksi pola transaksi mencurigakan | Rule-based transaction pattern detection |
 
 ### 12.3 Risk Scoring untuk Aliran Dana
 
@@ -408,22 +409,22 @@ Risk Score =
 + 15% kecepatan dana masuk-keluar
 ```
 
-### 12.4 Community Detection dan Centrality
+### 12.4 Cluster Sederhana dan Centrality
 
-Community detection dapat digunakan untuk menemukan kelompok node yang saling terhubung erat dalam graf.[^neo4j-community] Centrality dapat digunakan untuk mencari node penting, misalnya rekening yang paling banyak menerima transfer atau menjadi jembatan aliran dana. Neo4j memiliki algoritma seperti Degree Centrality untuk mengukur jumlah hubungan masuk atau keluar dari sebuah node.[^neo4j-degree]
+Untuk MVP, cluster dapat dibuat secara sederhana dari connected component atau rule relasi yang sama, misalnya rekening dan domain yang muncul pada beberapa laporan. Centrality dapat digunakan untuk mencari node penting, misalnya rekening yang paling banyak menerima transfer atau menjadi jembatan aliran dana. Neo4j memiliki algoritma seperti Degree Centrality untuk mengukur jumlah hubungan masuk atau keluar dari sebuah node.[^neo4j-degree]
 
 Dalam konteks SATPAM:
 
-- **Community Detection** membantu menemukan cluster rekening mencurigakan.
+- **Rule-based cluster / connected component** membantu menemukan cluster rekening mencurigakan tanpa perlu algoritma berat.
 - **Degree Centrality** membantu menemukan rekening yang paling banyak terhubung.
-- **Betweenness Centrality** dapat membantu menemukan rekening yang menjadi jembatan antar cluster.
-- **PageRank** dapat membantu menemukan entitas paling berpengaruh dalam jaringan.
+- **Betweenness Centrality** dapat menjadi pengembangan lanjutan untuk menemukan rekening yang menjadi jembatan antar cluster.
+- **PageRank** dapat menjadi pengembangan lanjutan untuk menemukan entitas paling berpengaruh dalam jaringan.
 
 ---
 
-## 13. Heuristic untuk A* Search
+## 13. A* Opsional dan Heuristic Prototype
 
-A\* Search menggunakan konsep:
+A\* Search dapat dipakai sebagai metode tambahan untuk risk-prioritized path search jika heuristic dan bobot edge sudah dijelaskan sebagai rule prototype, bukan sebagai model forensik final. A\* Search menggunakan konsep:
 
 ```text
 f(n) = g(n) + h(n)
@@ -437,7 +438,7 @@ Dalam SATPAM:
 | `h(n)` | Estimasi risiko ke depan |
 | `f(n)` | Nilai prioritas jalur |
 
-Contoh heuristic:
+Contoh heuristic konfigurasi prototype:
 
 | Heuristic | Bobot Risiko Contoh |
 |---|---:|
@@ -559,7 +560,7 @@ Output SATPAM tidak hanya berupa label “aman” atau “berbahaya”, tetapi b
 | Cluster jaringan | Cluster rekening dan domain terkait |
 | Node prioritas | Rekening A, nomor WA B, domain C |
 | Alasan risiko | Terhubung ke blacklist, banyak laporan, pola transaksi mencurigakan |
-| Rekomendasi tindakan | Blokir domain, investigasi rekening, tandai APK |
+| Rekomendasi tindakan | Review pemblokiran setelah verifikasi manusia, investigasi rekening, tandai APK sebagai kandidat review |
 | Level confidence | Rendah, sedang, tinggi |
 
 ---
@@ -703,7 +704,7 @@ Sistem existing sudah ada, seperti pemblokiran situs, penanganan pinjol ilegal, 
 
 SATPAM mencoba menyatukan semuanya ke dalam satu peta besar. Ibarat papan investigasi detektif, setiap link, rekening, nomor, dan aplikasi menjadi titik, lalu hubungan antar titik digambarkan sebagai garis.
 
-Dengan database graf seperti Neo4j, sistem bisa menyimpan data sebagai jaringan. Setelah itu, algoritma search seperti BFS, DFS, UCS, BDS, dan A* digunakan untuk mencari jalur hubungan.
+Dengan database graf seperti Neo4j, sistem bisa menyimpan data sebagai jaringan. Setelah itu, BFS digunakan untuk mencari jalur hubungan utama, sedangkan UCS, BDS, dan A* dapat menjadi opsi lanjutan jika bobot dan heuristic sudah jelas.
 
 Output SATPAM bukan cuma “ini berbahaya”, tetapi juga “kenapa ini berbahaya”, “terhubung ke siapa saja”, dan “mana yang harus ditangani dulu”.
 
@@ -728,11 +729,11 @@ Judul yang paling direkomendasikan:
 
 SATPAM merupakan konsep sistem AI yang memandang judol dan pinjol ilegal sebagai **ekosistem jaringan**, bukan sebagai kasus tunggal. Sistem ini memanfaatkan graph database untuk menyatukan berbagai entitas seperti korban, laporan, domain, APK, nomor WhatsApp, rekening, e-wallet, QRIS, akun promosi, dan blacklist.
 
-Dengan algoritma searching seperti BFS, DFS, DLS, IDS, UCS, BDS, dan terutama A\* Search, SATPAM dapat mencari jalur risiko, menghubungkan laporan baru dengan jaringan lama, menelusuri aliran dana, dan memberi prioritas tindakan.
+Dengan metode seperti BFS untuk evidence path, rule-based risk scoring, degree centrality sederhana, serta A\* Search/UCS/BDS sebagai opsi lanjutan, SATPAM dapat mencari jalur risiko, menghubungkan laporan baru dengan jaringan lama, menelusuri aliran dana, dan memberi prioritas tindakan.
 
 Novelty utama SATPAM adalah kemampuannya untuk mengubah data yang sebelumnya terpisah-pisah menjadi **graph intelligence** yang explainable. Dengan begitu, sistem tidak hanya memberi label “berbahaya”, tetapi juga menjelaskan hubungan, jalur bukti, skor risiko, dan rekomendasi penanganan.
 
-Untuk prototype, SATPAM dapat dibuat dengan data simulasi, laporan dummy, crawler sederhana, dan Neo4j. Untuk implementasi nyata, sistem memerlukan integrasi data resmi, perlindungan privasi, dan verifikasi manusia.
+Untuk prototype, SATPAM dapat dibuat dengan data simulasi, laporan dummy, crawler finding dummy/simulasi, dan Neo4j. Untuk implementasi nyata, sistem memerlukan integrasi data resmi, perlindungan privasi, dan verifikasi manusia.
 
 ---
 
