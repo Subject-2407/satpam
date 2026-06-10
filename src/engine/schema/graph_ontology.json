@@ -1,0 +1,346 @@
+{
+  "version": "0.1.0-week1",
+  "scope": "week_1_foundation",
+  "description": "SATPAM graph ontology contract for dummy-data prototype foundation.",
+  "guardrails": [
+    "dummy_data_only",
+    "no_real_illegal_domains",
+    "no_real_phone_numbers",
+    "no_real_bank_accounts",
+    "no_live_scraping",
+    "no_live_traffic_monitoring",
+    "no_auto_blocking",
+    "human_verification_required"
+  ],
+  "riskLevels": [
+    "low",
+    "medium",
+    "high",
+    "critical"
+  ],
+  "confidenceLevels": [
+    "low",
+    "medium",
+    "high"
+  ],
+  "verificationStatuses": [
+    "unreviewed",
+    "needs_review",
+    "verified_risk",
+    "false_positive",
+    "escalated",
+    "closed"
+  ],
+  "blacklistStatuses": [
+    "not_listed",
+    "blacklist_candidate",
+    "confirmed_blacklist",
+    "recommended_for_blocking"
+  ],
+  "standardNodeProperties": [
+    "id",
+    "type",
+    "label",
+    "source",
+    "firstSeenAt",
+    "lastSeenAt",
+    "confidence",
+    "riskScore",
+    "riskLevel",
+    "verificationStatus",
+    "createdAt",
+    "updatedAt"
+  ],
+  "standardRelationshipProperties": [
+    "id",
+    "type",
+    "from",
+    "to",
+    "source",
+    "confidence",
+    "weight",
+    "evidenceId",
+    "firstSeenAt",
+    "lastSeenAt",
+    "createdAt"
+  ],
+  "nodeTypes": [
+    {
+      "type": "Report",
+      "idPrefix": "report",
+      "requiredProperties": ["id", "source", "description", "createdAt", "status"]
+    },
+    {
+      "type": "Victim",
+      "idPrefix": "victim",
+      "requiredProperties": ["id", "alias", "riskExposureLevel"]
+    },
+    {
+      "type": "URL",
+      "idPrefix": "url",
+      "requiredProperties": ["id", "rawUrl", "normalizedUrl", "domain", "firstSeenAt"]
+    },
+    {
+      "type": "Domain",
+      "idPrefix": "domain",
+      "requiredProperties": ["id", "domainName", "category", "riskScore"]
+    },
+    {
+      "type": "LinkShortener",
+      "idPrefix": "short",
+      "requiredProperties": ["id", "shortUrl", "provider"]
+    },
+    {
+      "type": "SocialMediaAccount",
+      "idPrefix": "social",
+      "requiredProperties": ["id", "platform", "username", "profileUrl"]
+    },
+    {
+      "type": "PhoneNumber",
+      "idPrefix": "phone",
+      "requiredProperties": ["id", "normalizedNumber", "countryCode", "reportCount"]
+    },
+    {
+      "type": "BankAccount",
+      "idPrefix": "bank",
+      "requiredProperties": ["id", "bankName", "accountAlias", "maskedAccountNumber"]
+    },
+    {
+      "type": "EWallet",
+      "idPrefix": "ewallet",
+      "requiredProperties": ["id", "provider", "walletAlias", "maskedWalletId"]
+    },
+    {
+      "type": "QRISMerchant",
+      "idPrefix": "qris",
+      "requiredProperties": ["id", "merchantAlias", "merchantCategory"]
+    },
+    {
+      "type": "APK",
+      "idPrefix": "apk",
+      "requiredProperties": ["id", "appName", "packageName", "requestedPermissions"]
+    },
+    {
+      "type": "Keyword",
+      "idPrefix": "keyword",
+      "requiredProperties": ["id", "keyword", "category", "weight"]
+    },
+    {
+      "type": "Transaction",
+      "idPrefix": "tx",
+      "requiredProperties": ["id", "amount", "timestamp", "channel", "transactionType"]
+    },
+    {
+      "type": "TrafficEvent",
+      "idPrefix": "traffic",
+      "requiredProperties": ["id", "eventType", "timestamp", "sourceAlias", "destinationDomain", "requestCount", "simulationOnly"]
+    },
+    {
+      "type": "CrawlerFinding",
+      "idPrefix": "crawler",
+      "requiredProperties": ["id", "findingType", "sourceUrl", "contentSummary", "matchedKeywords", "capturedAt", "simulationOnly"]
+    },
+    {
+      "type": "BlacklistEntity",
+      "idPrefix": "blacklist",
+      "requiredProperties": ["id", "entityType", "reason", "severity"]
+    },
+    {
+      "type": "BlacklistCandidate",
+      "idPrefix": "candidate",
+      "requiredProperties": ["id", "entityId", "candidateReason", "recommendedAction", "status", "createdAt"]
+    },
+    {
+      "type": "BlacklistDecision",
+      "idPrefix": "decision",
+      "requiredProperties": ["id", "decision", "reviewerId", "decisionNote", "decidedAt"]
+    },
+    {
+      "type": "Cluster",
+      "idPrefix": "cluster",
+      "requiredProperties": ["id", "name", "clusterType", "riskScore"]
+    },
+    {
+      "type": "Evidence",
+      "idPrefix": "evidence",
+      "requiredProperties": ["id", "evidenceType", "contentSummary", "createdAt"]
+    },
+    {
+      "type": "RiskAssessment",
+      "idPrefix": "risk",
+      "requiredProperties": ["id", "score", "level", "explanation", "createdAt"]
+    },
+    {
+      "type": "VerificationCase",
+      "idPrefix": "case",
+      "requiredProperties": ["id", "status", "reviewerId", "decisionNote"]
+    },
+    {
+      "type": "Recommendation",
+      "idPrefix": "rec",
+      "requiredProperties": ["id", "actionType", "priority", "reason"]
+    },
+    {
+      "type": "User",
+      "idPrefix": "user",
+      "requiredProperties": ["id", "name", "role", "status"]
+    },
+    {
+      "type": "AuditLog",
+      "idPrefix": "audit",
+      "requiredProperties": ["id", "actorId", "action", "targetId", "timestamp"]
+    }
+  ],
+  "relationshipTypes": [
+    {
+      "type": "REPORTED",
+      "from": ["Victim"],
+      "to": ["Report"],
+      "meaning": "Dummy reporter submitted a report."
+    },
+    {
+      "type": "MENTIONS",
+      "from": ["Report"],
+      "to": ["URL", "Domain", "SocialMediaAccount", "PhoneNumber", "BankAccount", "EWallet", "QRISMerchant", "APK", "Keyword"],
+      "meaning": "Report mentions an entity."
+    },
+    {
+      "type": "CONTAINS_KEYWORD",
+      "from": ["Report", "URL", "SocialMediaAccount", "CrawlerFinding"],
+      "to": ["Keyword"],
+      "meaning": "Content contains a suspicious or benign keyword."
+    },
+    {
+      "type": "REDIRECTS_TO",
+      "from": ["URL", "LinkShortener"],
+      "to": ["URL", "Domain"],
+      "meaning": "Link redirects or resolves to another target."
+    },
+    {
+      "type": "PROMOTES",
+      "from": ["SocialMediaAccount"],
+      "to": ["URL", "Domain", "APK"],
+      "meaning": "Social account promotes a URL, domain, or APK."
+    },
+    {
+      "type": "CONTACTS",
+      "from": ["Domain", "URL", "SocialMediaAccount"],
+      "to": ["PhoneNumber"],
+      "meaning": "Entity directs users to a phone or WhatsApp number."
+    },
+    {
+      "type": "USES_ACCOUNT",
+      "from": ["PhoneNumber", "Domain", "APK"],
+      "to": ["BankAccount", "EWallet", "QRISMerchant"],
+      "meaning": "Entity uses a payment account."
+    },
+    {
+      "type": "TRANSFERRED_TO",
+      "from": ["Victim", "BankAccount", "EWallet"],
+      "to": ["BankAccount", "EWallet"],
+      "meaning": "Simulated fund movement."
+    },
+    {
+      "type": "OBSERVED_TRAFFIC_TO",
+      "from": ["TrafficEvent"],
+      "to": ["Domain", "URL"],
+      "meaning": "Simulation traffic event points to a domain or URL."
+    },
+    {
+      "type": "HAS_REDIRECT_EVENT",
+      "from": ["TrafficEvent", "CrawlerFinding"],
+      "to": ["URL", "Domain"],
+      "meaning": "Simulation traffic or crawler found a redirect."
+    },
+    {
+      "type": "CRAWLED_FROM",
+      "from": ["CrawlerFinding"],
+      "to": ["URL", "SocialMediaAccount"],
+      "meaning": "Crawler finding originated from a dummy URL or social account."
+    },
+    {
+      "type": "FOUND_ENTITY",
+      "from": ["CrawlerFinding"],
+      "to": ["URL", "Domain", "SocialMediaAccount", "PhoneNumber", "BankAccount", "EWallet", "QRISMerchant", "APK", "Keyword"],
+      "meaning": "Crawler or scraper simulation found an entity."
+    },
+    {
+      "type": "LINKED_TO_APK",
+      "from": ["Domain", "URL", "SocialMediaAccount"],
+      "to": ["APK"],
+      "meaning": "Entity links to an APK."
+    },
+    {
+      "type": "REQUESTS_PERMISSION",
+      "from": ["APK"],
+      "to": ["Keyword"],
+      "meaning": "APK requests a sensitive permission represented as a keyword."
+    },
+    {
+      "type": "SIMILAR_TO",
+      "from": ["URL", "Domain", "SocialMediaAccount", "PhoneNumber", "BankAccount", "EWallet", "QRISMerchant", "APK", "Keyword"],
+      "to": ["URL", "Domain", "SocialMediaAccount", "PhoneNumber", "BankAccount", "EWallet", "QRISMerchant", "APK", "Keyword"],
+      "meaning": "Entity is similar to another entity."
+    },
+    {
+      "type": "PART_OF_CLUSTER",
+      "from": ["URL", "Domain", "SocialMediaAccount", "PhoneNumber", "BankAccount", "EWallet", "QRISMerchant", "APK", "Keyword"],
+      "to": ["Cluster"],
+      "meaning": "Entity belongs to a risk cluster."
+    },
+    {
+      "type": "BLACKLISTED_AS",
+      "from": ["URL", "Domain", "SocialMediaAccount", "PhoneNumber", "BankAccount", "EWallet", "QRISMerchant", "APK", "Keyword"],
+      "to": ["BlacklistEntity"],
+      "meaning": "Entity is linked to a dummy blacklist entry."
+    },
+    {
+      "type": "FLAGGED_AS_CANDIDATE",
+      "from": ["URL", "Domain", "SocialMediaAccount", "PhoneNumber", "BankAccount", "EWallet", "QRISMerchant", "APK"],
+      "to": ["BlacklistCandidate"],
+      "meaning": "Entity is flagged as a blacklist candidate for review."
+    },
+    {
+      "type": "DECIDED_AS",
+      "from": ["BlacklistCandidate"],
+      "to": ["BlacklistDecision"],
+      "meaning": "Candidate has a human review decision."
+    },
+    {
+      "type": "HAS_EVIDENCE",
+      "from": ["Report", "URL", "Domain", "SocialMediaAccount", "PhoneNumber", "BankAccount", "EWallet", "QRISMerchant", "APK", "Keyword"],
+      "to": ["Evidence"],
+      "meaning": "Report or entity has supporting dummy evidence."
+    },
+    {
+      "type": "HAS_RISK_ASSESSMENT",
+      "from": ["Report", "URL", "Domain", "SocialMediaAccount", "PhoneNumber", "BankAccount", "EWallet", "QRISMerchant", "APK", "Cluster"],
+      "to": ["RiskAssessment"],
+      "meaning": "Subject has a risk assessment."
+    },
+    {
+      "type": "HAS_RECOMMENDATION",
+      "from": ["RiskAssessment"],
+      "to": ["Recommendation"],
+      "meaning": "Risk assessment produced a recommendation."
+    },
+    {
+      "type": "OPENED_CASE",
+      "from": ["Report", "RiskAssessment"],
+      "to": ["VerificationCase"],
+      "meaning": "Subject opened a verification case."
+    },
+    {
+      "type": "REVIEWED_BY",
+      "from": ["VerificationCase"],
+      "to": ["User"],
+      "meaning": "Verification case was reviewed by a user."
+    },
+    {
+      "type": "AUDITED_BY",
+      "from": ["AuditLog"],
+      "to": ["User"],
+      "meaning": "Audit log is related to a user."
+    }
+  ]
+}

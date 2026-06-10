@@ -1,0 +1,478 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SATPAM Week 1 Dummy Dataset Schema",
+  "version": "0.1.0-week1",
+  "type": "object",
+  "required": ["metadata", "nodes", "relationships", "demoScenarios"],
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["datasetId", "version", "scope", "createdAt", "simulationOnly", "dataPolicy"],
+      "additionalProperties": true,
+      "properties": {
+        "datasetId": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "scope": { "const": "week_1_foundation" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "simulationOnly": { "const": true },
+        "dataPolicy": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        }
+      }
+    },
+    "nodes": {
+      "type": "object",
+      "required": [
+        "reports",
+        "victims",
+        "urls",
+        "domains",
+        "linkShorteners",
+        "socialMediaAccounts",
+        "phoneNumbers",
+        "bankAccounts",
+        "eWallets",
+        "qrisMerchants",
+        "apks",
+        "keywords",
+        "transactions",
+        "trafficEvents",
+        "crawlerFindings",
+        "blacklistEntities",
+        "blacklistCandidates",
+        "blacklistDecisions",
+        "clusters",
+        "evidences",
+        "riskAssessments",
+        "verificationCases",
+        "recommendations",
+        "users",
+        "auditLogs"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "reports": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/baseNode" },
+              {
+                "type": "object",
+                "required": ["description", "status", "categoryHint"],
+                "properties": {
+                  "type": { "const": "Report" },
+                  "description": { "type": "string", "minLength": 1 },
+                  "status": { "enum": ["new", "auto_triaged", "needs_review", "closed"] },
+                  "categoryHint": { "enum": ["judol", "pinjol_illegal", "cross_ecosystem", "payment_flow", "traffic_crawler", "benign"] }
+                }
+              }
+            ]
+          }
+        },
+        "victims": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/baseNode" },
+              {
+                "type": "object",
+                "required": ["alias", "riskExposureLevel"],
+                "properties": {
+                  "type": { "const": "Victim" },
+                  "alias": { "type": "string", "minLength": 1 },
+                  "riskExposureLevel": { "enum": ["low", "medium", "high"] }
+                }
+              }
+            ]
+          }
+        },
+        "urls": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/baseNode" },
+              {
+                "type": "object",
+                "required": ["rawUrl", "normalizedUrl", "domain"],
+                "properties": {
+                  "type": { "const": "URL" },
+                  "rawUrl": { "type": "string", "minLength": 1 },
+                  "normalizedUrl": { "type": "string", "minLength": 1 },
+                  "domain": { "type": "string", "minLength": 1 }
+                }
+              }
+            ]
+          }
+        },
+        "domains": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/baseNode" },
+              {
+                "type": "object",
+                "required": ["domainName", "category"],
+                "properties": {
+                  "type": { "const": "Domain" },
+                  "domainName": { "type": "string", "minLength": 1 },
+                  "category": { "type": "string", "minLength": 1 }
+                }
+              }
+            ]
+          }
+        },
+        "linkShorteners": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/baseNode" },
+              {
+                "type": "object",
+                "required": ["shortUrl", "provider"],
+                "properties": {
+                  "type": { "const": "LinkShortener" },
+                  "shortUrl": { "type": "string", "minLength": 1 },
+                  "provider": { "type": "string", "minLength": 1 }
+                }
+              }
+            ]
+          }
+        },
+        "socialMediaAccounts": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/baseNode" },
+              {
+                "type": "object",
+                "required": ["platform", "username", "profileUrl"],
+                "properties": {
+                  "type": { "const": "SocialMediaAccount" },
+                  "platform": { "type": "string", "minLength": 1 },
+                  "username": { "type": "string", "minLength": 1 },
+                  "profileUrl": { "type": "string", "minLength": 1 }
+                }
+              }
+            ]
+          }
+        },
+        "phoneNumbers": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/baseNode" },
+              {
+                "type": "object",
+                "required": ["normalizedNumber", "countryCode", "reportCount"],
+                "properties": {
+                  "type": { "const": "PhoneNumber" },
+                  "normalizedNumber": { "type": "string", "minLength": 1 },
+                  "countryCode": { "type": "string", "minLength": 1 },
+                  "reportCount": { "type": "integer", "minimum": 0 }
+                }
+              }
+            ]
+          }
+        },
+        "bankAccounts": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/baseNode" },
+              {
+                "type": "object",
+                "required": ["bankName", "accountAlias", "maskedAccountNumber"],
+                "properties": {
+                  "type": { "const": "BankAccount" },
+                  "bankName": { "type": "string", "minLength": 1 },
+                  "accountAlias": { "type": "string", "minLength": 1 },
+                  "maskedAccountNumber": { "type": "string", "pattern": "\\*\\*\\*\\*" }
+                }
+              }
+            ]
+          }
+        },
+        "eWallets": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/baseNode" },
+              {
+                "type": "object",
+                "required": ["provider", "walletAlias", "maskedWalletId"],
+                "properties": {
+                  "type": { "const": "EWallet" },
+                  "provider": { "type": "string", "minLength": 1 },
+                  "walletAlias": { "type": "string", "minLength": 1 },
+                  "maskedWalletId": { "type": "string", "pattern": "\\*\\*\\*\\*" }
+                }
+              }
+            ]
+          }
+        },
+        "qrisMerchants": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/baseNode" },
+              {
+                "type": "object",
+                "required": ["merchantAlias", "merchantCategory"],
+                "properties": {
+                  "type": { "const": "QRISMerchant" },
+                  "merchantAlias": { "type": "string", "minLength": 1 },
+                  "merchantCategory": { "type": "string", "minLength": 1 }
+                }
+              }
+            ]
+          }
+        },
+        "apks": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/baseNode" },
+              {
+                "type": "object",
+                "required": ["appName", "packageName", "requestedPermissions"],
+                "properties": {
+                  "type": { "const": "APK" },
+                  "appName": { "type": "string", "minLength": 1 },
+                  "packageName": { "type": "string", "minLength": 1 },
+                  "requestedPermissions": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "keywords": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/baseNode" },
+              {
+                "type": "object",
+                "required": ["keyword", "category", "weight"],
+                "properties": {
+                  "type": { "const": "Keyword" },
+                  "keyword": { "type": "string", "minLength": 1 },
+                  "category": { "type": "string", "minLength": 1 },
+                  "weight": { "type": "integer", "minimum": 0, "maximum": 100 }
+                }
+              }
+            ]
+          }
+        },
+        "transactions": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/baseNode" },
+              {
+                "type": "object",
+                "required": ["amount", "timestamp", "channel", "transactionType"],
+                "properties": {
+                  "type": { "const": "Transaction" },
+                  "amount": { "type": "integer", "minimum": 0 },
+                  "timestamp": { "type": "string", "format": "date-time" },
+                  "channel": { "type": "string", "minLength": 1 },
+                  "transactionType": { "type": "string", "minLength": 1 }
+                }
+              }
+            ]
+          }
+        },
+        "trafficEvents": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/baseNode" },
+              {
+                "type": "object",
+                "required": ["eventType", "timestamp", "sourceAlias", "destinationDomain", "requestCount", "simulationOnly"],
+                "properties": {
+                  "type": { "const": "TrafficEvent" },
+                  "eventType": { "type": "string", "minLength": 1 },
+                  "timestamp": { "type": "string", "format": "date-time" },
+                  "sourceAlias": { "type": "string", "minLength": 1 },
+                  "destinationDomain": { "type": "string", "minLength": 1 },
+                  "requestCount": { "type": "integer", "minimum": 0 },
+                  "simulationOnly": { "const": true }
+                }
+              }
+            ]
+          }
+        },
+        "crawlerFindings": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/baseNode" },
+              {
+                "type": "object",
+                "required": ["findingType", "sourceUrl", "contentSummary", "matchedKeywords", "capturedAt", "simulationOnly"],
+                "properties": {
+                  "type": { "const": "CrawlerFinding" },
+                  "findingType": { "type": "string", "minLength": 1 },
+                  "sourceUrl": { "type": "string", "minLength": 1 },
+                  "contentSummary": { "type": "string", "minLength": 1 },
+                  "matchedKeywords": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  },
+                  "capturedAt": { "type": "string", "format": "date-time" },
+                  "simulationOnly": { "const": true }
+                }
+              }
+            ]
+          }
+        },
+        "blacklistEntities": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/baseNode" },
+              {
+                "type": "object",
+                "required": ["entityType", "reason", "severity"],
+                "properties": {
+                  "type": { "const": "BlacklistEntity" },
+                  "entityId": { "type": "string" },
+                  "entityType": { "type": "string", "minLength": 1 },
+                  "reason": { "type": "string", "minLength": 1 },
+                  "severity": { "enum": ["low", "medium", "high", "critical"] }
+                }
+              }
+            ]
+          }
+        },
+        "blacklistCandidates": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/baseNode" }
+        },
+        "blacklistDecisions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/baseNode" }
+        },
+        "clusters": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/baseNode" },
+              {
+                "type": "object",
+                "required": ["name", "clusterType"],
+                "properties": {
+                  "type": { "const": "Cluster" },
+                  "name": { "type": "string", "minLength": 1 },
+                  "clusterType": { "type": "string", "minLength": 1 }
+                }
+              }
+            ]
+          }
+        },
+        "evidences": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/baseNode" }
+        },
+        "riskAssessments": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/baseNode" }
+        },
+        "verificationCases": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/baseNode" }
+        },
+        "recommendations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/baseNode" }
+        },
+        "users": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/baseNode" }
+        },
+        "auditLogs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/baseNode" }
+        }
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/relationship" }
+    },
+    "demoScenarios": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "description", "seedReportIds"],
+        "additionalProperties": true,
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "name": { "type": "string", "minLength": 1 },
+          "description": { "type": "string", "minLength": 1 },
+          "seedReportIds": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "baseNode": {
+      "type": "object",
+      "required": ["id", "type", "label", "source", "createdAt"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 },
+        "firstSeenAt": { "type": "string", "format": "date-time" },
+        "lastSeenAt": { "type": "string", "format": "date-time" },
+        "confidence": { "enum": ["low", "medium", "high"] },
+        "riskScore": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "riskLevel": { "enum": ["low", "medium", "high", "critical"] },
+        "verificationStatus": {
+          "enum": ["unreviewed", "needs_review", "verified_risk", "false_positive", "escalated", "closed"]
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "relationshipEndpoint": {
+      "type": "object",
+      "required": ["type", "id"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "type": "string", "minLength": 1 },
+        "id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "relationship": {
+      "type": "object",
+      "required": ["id", "type", "from", "to", "source", "confidence", "weight", "createdAt"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 },
+        "from": { "$ref": "#/$defs/relationshipEndpoint" },
+        "to": { "$ref": "#/$defs/relationshipEndpoint" },
+        "source": { "type": "string", "minLength": 1 },
+        "confidence": { "enum": ["low", "medium", "high"] },
+        "weight": { "type": "number", "minimum": 0 },
+        "evidenceId": { "type": ["string", "null"] },
+        "firstSeenAt": { "type": "string", "format": "date-time" },
+        "lastSeenAt": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}
