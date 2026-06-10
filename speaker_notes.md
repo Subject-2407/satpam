@@ -130,6 +130,6 @@ Intinya, SATPAM membantu kita membaca masalah judol-pinjol ilegal bukan sebagai 
 
 Kontribusi utamanya adalah **menyatukan** potongan-potongan: laporan publik, hasil crawler, indikator transaksi, blacklist existing, graph search algorithms, risk scoring, dan dashboard prioritas—semua dalam satu konsep yang explainable dan human-centric.
 
-Terakhir, saya ingin mengucapkan terima kasih kepada Pak/Bu Professor atas kesempatan ini. Proposal ini didasarkan pada referensi dari dokumen PPATK, Komdigi, OJK/IASC, dokumentasi Neo4j, dan tentunya SRS dan proposal komprehensif SATPAM yang kami kembangkan. 
+Terakhir, saya ingin mengucapkan terima kasih kepada Pak/Bu Professor atas kesempatan ini. Proposal ini didasarkan pada referensi dari dokumen PPATK, Komdigi, OJK/IASC, dokumentasi Neo4j, serta jurnal acuan tentang web scraping dan text mining untuk deteksi judi online, graph database untuk fraud detection, cybersecurity knowledge graph, CTI graph, explainable fraud detection, dan human-in-the-loop feedback. Tentunya, SRS dan proposal komprehensif SATPAM juga menjadi basis rancangan sistem yang kami kembangkan.
 
 Saya terbuka untuk pertanyaan dan diskusi lebih lanjut. Terima kasih.

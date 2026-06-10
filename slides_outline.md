@@ -78,4 +78,4 @@
 
 **Proof object:** Closing thesis + compact references.
 
-**On-slide text:** Detect, Map, Explain, Prioritize, Verify.
+**On-slide text:** Detect, Map, Explain, Prioritize, Verify; referensi institusional, Neo4j, dokumen SATPAM, dan jurnal acuan [J1]-[J8].

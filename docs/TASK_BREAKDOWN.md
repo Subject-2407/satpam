@@ -1,6 +1,6 @@
 # Pembagian Pengembangan SATPAM
 
-Dokumen ini merangkum pembagian pengembangan sistem SATPAM berdasarkan kebutuhan pada `SRS.md`. Tujuannya agar pengerjaan prototype lebih rapi, mudah dibagi ke 3 orang, dan tetap menghasilkan demo end-to-end yang bisa ditunjukkan.
+Dokumen ini merangkum pembagian pengembangan sistem SATPAM berdasarkan kebutuhan pada `docs/SRS.md`. Tujuannya agar pengerjaan prototype lebih rapi, mudah dibagi ke 3 orang, dan tetap menghasilkan demo end-to-end yang bisa ditunjukkan.
 
 ## Ringkasan Sistem
 

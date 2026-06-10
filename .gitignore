@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+
+node_modules/
+dist/
+coverage/
+
+.env
+.env.*
+
+~$*.pptx
+*.pptx.bak

@@ -856,17 +856,17 @@ def slide_10(prs):
     add_panel(slide, 8.35, 1.1, 3.95, 5.45, fill=BG_ALT, line=SOFT)
     add_text(slide, 8.62, 1.38, 3.3, 0.36, "Referensi utama", size=18, color=CYAN, bold=True, font=TITLE_FONT)
     refs = [
-        "[1] PPATK, Catatan Capaian Strategis 2025, 2026.",
-        "[2] Komdigi, laporan pemblokiran rekening judol, 2025.",
-        "[3] OJK, Indonesia Anti-Scam Centre, 2026.",
-        "[4] OJK, Waspada Pinjaman Online Ilegal.",
-        "[5]-[8] Neo4j Documentation: graph concepts, path finding, BFS, centrality.",
-        "[9]-[11] SRS dan dokumen proposal SATPAM lokal.",
+        "[1]-[4] PPATK, Komdigi, OJK/IASC, pinjol ilegal.",
+        "[5]-[8] Neo4j: graph, path finding, BFS, centrality.",
+        "[9]-[11] SRS, proposal, gap-inovasi SATPAM.",
+        "[J1]-[J2] Web scraping + text mining deteksi judol.",
+        "[J3]-[J7] Graph fraud, CTI graph, explainable detection.",
+        "[J8] Human-in-the-loop untuk financial fraud detection.",
     ]
     for i, ref in enumerate(refs):
-        add_text(slide, 8.62, 1.95 + i * 0.62, 3.2, 0.36, ref, size=8.6, color=TEXT)
+        add_text(slide, 8.62, 1.95 + i * 0.62, 3.2, 0.39, ref, size=8.2, color=TEXT)
 
-    add_footer(slide, 10, "Daftar lengkap tersedia di references.md.")
+    add_footer(slide, 10, "Daftar lengkap tersedia di references.md dan JURNAL_ACUAN_UTAMA.md.")
 
 
 def add_fade_transitions(pptx_path):

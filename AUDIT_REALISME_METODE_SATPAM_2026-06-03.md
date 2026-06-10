@@ -8,7 +8,7 @@ Target:
 |---|---|
 | `final_proposal_satpam.pptx` | Apakah klaim slide realistis untuk prototype |
 | `SATPAM_Proposal_Comprehensive.md` | Apakah metode yang ditulis layak, terlalu luas, atau perlu diganti |
-| `SRS.md` | Pembanding batasan scope prototype |
+| `docs/SRS.md` | Pembanding batasan scope prototype |
 
 ## Kesimpulan Singkat
 
