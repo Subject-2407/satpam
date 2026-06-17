@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import close_driver, init_driver
-from app.routers import auth, health, import_data, reports
+from app.routers import analysis, auth, health, import_data, reports
 
 
 @asynccontextmanager
@@ -37,3 +37,4 @@ app.include_router(health.router)
 app.include_router(auth.router)
 app.include_router(reports.router)
 app.include_router(import_data.router)
+app.include_router(analysis.router)
