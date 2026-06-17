@@ -21,3 +21,21 @@
 [10] SATPAM Project, "SATPAM Proposal Comprehensive," local project document, Jun. 2, 2026.
 
 [11] SATPAM Project, "Latar Belakang, Gap, dan Inovasi Sistem SATPAM," local project document, Jun. 2, 2026.
+
+## Jurnal Acuan Utama
+
+[J1] "Detecting Hidden Illegal Online Gambling on .go.id Domains Using Web Scraping Algorithms." [Online]. Available: https://journal.universitasbumigora.ac.id/index.php/matrik/article/view/3824
+
+[J2] "Detecting Online Gambling Promotions on Indonesian Twitter Using Text Mining Algorithm." [Online]. Available: https://scholar.ui.ac.id/en/publications/detecting-online-gambling-promotions-on-indonesian-twitter-using-/
+
+[J3] "Enhancing Fraud Detection in Banking by Integration of Graph Databases with Machine Learning." [Online]. Available: https://www.sciencedirect.com/science/article/pii/S2215016124001377
+
+[J4] "A Survey on Cybersecurity Knowledge Graph Construction." [Online]. Available: https://www.sciencedirect.com/science/article/abs/pii/S0167404823004340
+
+[J5] "TINKER: A Framework for Open Source Cyberthreat Intelligence." [Online]. Available: https://arxiv.org/abs/2102.05571
+
+[J6] "AttacKG: Constructing Technique Knowledge Graph from Cyber Threat Intelligence Reports." [Online]. Available: https://arxiv.org/abs/2111.07093
+
+[J7] "SEFraud: Graph-based Self-Explainable Fraud Detection." [Online]. Available: https://arxiv.org/abs/2406.11389
+
+[J8] "Enhancing Financial Fraud Detection with Human-in-the-Loop Feedback and Feedback Propagation." [Online]. Available: https://arxiv.org/abs/2411.05859

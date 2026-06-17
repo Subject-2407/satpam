@@ -20,6 +20,8 @@ Deck proposal ini dibuat untuk presentasi 10 menit tentang **SATPAM (Search-base
 - `slides_outline.md` - outline 10 slide dengan claim dan proof object.
 - `speaker_notes.md` - naskah narasi 10 menit dalam Bahasa Indonesia.
 - `references.md` - daftar referensi gaya IEEE.
+- `JURNAL_ACUAN_UTAMA.md` - ringkasan jurnal akademik yang mendukung novelty SATPAM.
+- `docs/SRS.md` - dokumen requirement utama SATPAM.
 - `visuals/` - Mermaid diagram, SVG source icons, dan PNG icon assets untuk PPTX.
 - `generate_ppt.py` - generator PowerPoint berbasis `python-pptx`.
 - `final_proposal_satpam.pptx` - deck final 16:9.
@@ -33,6 +35,7 @@ Deck memakai tema **dark blue cybersecurity** dengan aksen cyan, mint, amber, da
 Jalankan:
 
 ```bash
+python -m pip install -r requirements.txt
 python generate_ppt.py
 ```
 
