@@ -1,6 +1,10 @@
-import { ShieldCheck } from "lucide-react";
+import { LogOut, ShieldCheck, UserRound } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { ROLE_LABELS } from "../lib/format";
 
 export function Topbar() {
+  const { user, signOut } = useAuth();
+
   return (
     <header className="border-b border-slate-200 bg-white px-4 py-4 md:px-6">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
@@ -18,9 +22,19 @@ export function Topbar() {
           <span className="rounded-md border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
             Human Verification Required
           </span>
-          <span className="rounded-md border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-600">
-            Analyst Prototype
-          </span>
+          {user && (
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-600">
+              <UserRound size={14} aria-hidden="true" />
+              {ROLE_LABELS[user.role]}
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={signOut}
+            className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+          >
+            <LogOut size={14} aria-hidden="true" /> Keluar
+          </button>
         </div>
       </div>
     </header>

@@ -2,8 +2,8 @@ import type { LucideIcon } from "lucide-react";
 
 interface SummaryCardProps {
   label: string;
-  value: string;
-  helper: string;
+  value: string | number;
+  helper?: string;
   icon: LucideIcon;
 }
 
@@ -19,7 +19,7 @@ export function SummaryCard({ label, value, helper, icon: Icon }: SummaryCardPro
           <Icon size={18} aria-hidden="true" />
         </span>
       </div>
-      <p className="mt-3 text-sm text-slate-500">{helper}</p>
+      {helper && <p className="mt-3 text-sm text-slate-500">{helper}</p>}
     </section>
   );
 }
