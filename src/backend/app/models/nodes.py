@@ -1,7 +1,8 @@
 """
 Node models untuk SATPAM. Semua data bersifat dummy/simulasi — tidak ada data asli.
 
-Model mengikuti schema di src/engine/schema/dataset.schema.json.
+Model mengikuti schema di src/engine/schema/dataset.schema.json dan
+graph_ontology.json (requiredProperties per node type).
 Enforced constraints:
   - TrafficEvent.simulationOnly wajib True
   - CrawlerFinding.simulationOnly wajib True
@@ -179,6 +180,66 @@ class ClusterNode(BaseNode):
     clusterType: str
 
 
+class BlacklistCandidateNode(BaseNode):
+    type: Literal["BlacklistCandidate"] = "BlacklistCandidate"
+    entityId: str
+    candidateReason: str
+    recommendedAction: str
+    status: str
+
+
+class BlacklistDecisionNode(BaseNode):
+    type: Literal["BlacklistDecision"] = "BlacklistDecision"
+    decision: str
+    reviewerId: str
+    decisionNote: str
+    decidedAt: datetime
+
+
+class EvidenceNode(BaseNode):
+    type: Literal["Evidence"] = "Evidence"
+    evidenceType: str
+    contentSummary: str
+
+
+class RiskAssessmentNode(BaseNode):
+    type: Literal["RiskAssessment"] = "RiskAssessment"
+    score: int = Field(ge=0, le=100)
+    level: Literal["low", "medium", "high", "critical"]
+    explanation: str
+
+
+class VerificationCaseNode(BaseNode):
+    type: Literal["VerificationCase"] = "VerificationCase"
+    status: str
+    reviewerId: str
+    decisionNote: str
+
+
+class RecommendationNode(BaseNode):
+    type: Literal["Recommendation"] = "Recommendation"
+    actionType: str
+    priority: str
+    reason: str
+
+
+class GraphUserNode(BaseNode):
+    """User node dalam graph (bukan auth user) — merepresentasikan aktor/reviewer dalam data."""
+
+    type: Literal["User"] = "User"
+    name: str
+    role: str
+    status: str
+
+
+class AuditLogNode(BaseNode):
+    type: Literal["AuditLog"] = "AuditLog"
+    actorId: str
+    action: str
+    targetId: str
+    timestamp: datetime
+
+
 # ---------------------------------------------------------------------------
 # Container for bulk import payload
 # ---------------------------------------------------------------------------
@@ -205,15 +266,15 @@ class NodesContainer(BaseModel):
     trafficEvents: List[TrafficEventNode] = []
     crawlerFindings: List[CrawlerFindingNode] = []
     blacklistEntities: List[BlacklistEntityNode] = []
-    blacklistCandidates: List[BaseNode] = []
-    blacklistDecisions: List[BaseNode] = []
+    blacklistCandidates: List[BlacklistCandidateNode] = []
+    blacklistDecisions: List[BlacklistDecisionNode] = []
     clusters: List[ClusterNode] = []
-    evidences: List[BaseNode] = []
-    riskAssessments: List[BaseNode] = []
-    verificationCases: List[BaseNode] = []
-    recommendations: List[BaseNode] = []
-    users: List[BaseNode] = []
-    auditLogs: List[BaseNode] = []
+    evidences: List[EvidenceNode] = []
+    riskAssessments: List[RiskAssessmentNode] = []
+    verificationCases: List[VerificationCaseNode] = []
+    recommendations: List[RecommendationNode] = []
+    users: List[GraphUserNode] = []
+    auditLogs: List[AuditLogNode] = []
 
 
 class DatasetMetadata(BaseModel):
