@@ -1,0 +1,12 @@
+# Jurnal Acuan Utama SATPAM
+
+| No. | Acuan / Paper Terkait | Keterkaitan dengan Presentasi SATPAM | Link |
+|---:|---|---|---|
+| 1 | Detecting Hidden Illegal Online Gambling on .go.id Domains Using Web Scraping Algorithms | Mendukung latar belakang dan crawler finding. Relevan karena SATPAM membutuhkan deteksi awal dari domain/URL yang terindikasi judi online. | https://journal.universitasbumigora.ac.id/index.php/matrik/article/view/3824 |
+| 2 | Detecting Online Gambling Promotions on Indonesian Twitter Using Text Mining Algorithm | Mendukung entity extraction dan deteksi konten promosi judol. Cocok sebagai dasar bahwa konten judol dapat dianalisis otomatis memakai text mining. | https://scholar.ui.ac.id/en/publications/detecting-online-gambling-promotions-on-indonesian-twitter-using-/ |
+| 3 | Enhancing Fraud Detection in Banking by Integration of Graph Databases with Machine Learning | Mendukung graph intelligence dan fraud detection berbasis relasi. Ini sejalan dengan SATPAM yang melihat risiko sebagai jaringan, bukan entitas tunggal. | https://www.sciencedirect.com/science/article/pii/S2215016124001377 |
+| 4 | A Survey on Cybersecurity Knowledge Graph Construction | Mendukung arsitektur graph dan konsep knowledge graph dalam keamanan siber. Cocok untuk menjelaskan kenapa data ancaman perlu dibuat sebagai node dan relasi. | https://www.sciencedirect.com/science/article/abs/pii/S0167404823004340 |
+| 5 | TINKER: A Framework for Open Source Cyberthreat Intelligence | Mendukung konsep laporan ancaman menjadi graph terstruktur. Mirip dengan SATPAM yang mengubah laporan, domain, WA, rekening, dan APK menjadi graph. | https://arxiv.org/abs/2102.05571 |
+| 6 | AttacKG: Constructing Technique Knowledge Graph from Cyber Threat Intelligence Reports | Mendukung konsep evidence path dan analisis hubungan antar indikator ancaman. Relevan untuk menjelaskan jalur bukti seperti laporan ke domain, WA, dan rekening. | https://arxiv.org/abs/2111.07093 |
+| 7 | SEFraud: Graph-based Self-Explainable Fraud Detection | Mendukung explainable fraud detection. Relevan karena SATPAM tidak hanya memberi skor, tetapi juga menjelaskan alasan risiko lewat evidence path. | https://arxiv.org/abs/2406.11389 |
+| 8 | Enhancing Financial Fraud Detection with Human-in-the-Loop Feedback and Feedback Propagation | Mendukung human-in-the-loop. Cocok untuk memperkuat argumen bahwa hasil AI perlu diverifikasi manusia agar mengurangi false positive. | https://arxiv.org/abs/2411.05859 |

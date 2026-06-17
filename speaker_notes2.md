@@ -134,7 +134,9 @@ Kelima kata itu mencerminkan cara SATPAM memandang masalah judol-pinjol ilegal â
 
 Kontribusi utama proposal ini ada pada upaya menyatukan laporan publik, *crawler finding*, indikator transaksi, blacklist, *graph search*, *risk scoring*, dan dashboard prioritas â€” semua dalam satu konsep yang *explainable* dan tetap menghormati peran manusia sebagai pengambil keputusan akhir.
 
-Referensi utama berasal dari dokumen PPATK, Komdigi, OJK/IASC, dokumentasi resmi Neo4j, serta dokumen SRS dan proposal SATPAM yang menjadi basis rancangan sistem ini.
+Referensi utama berasal dari dokumen PPATK, Komdigi, OJK/IASC, dokumentasi resmi Neo4j, serta jurnal acuan tentang web scraping dan text mining untuk deteksi judi online, graph database untuk fraud detection, cybersecurity knowledge graph, CTI graph, explainable fraud detection, dan human-in-the-loop feedback.
+
+Dokumen SRS dan proposal SATPAM tetap menjadi basis rancangan sistem, sedangkan jurnal-jurnal tersebut menguatkan alasan kenapa pendekatan SATPAM memakai entity extraction, graph intelligence, evidence path, explainable scoring, dan verifikasi manusia.
 
 Terima kasih. Saya siap menerima pertanyaan atau masukan dari Bapak/Ibu.
 
