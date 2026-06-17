@@ -2,12 +2,13 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any, List, Literal, Optional
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 
-from app.auth import get_current_user
+from app.auth import Role, get_current_user, require_roles
 from app.database import get_driver
 from app.repositories.neo4j_repo import Neo4jRepository
+from app.routers._common import paginated, repo_or_503
 from app.services.ai_engine.analysis import analyze_entity
 from app.services.ai_engine.artifacts import build_analysis_artifacts
 from app.services.ai_engine.graph_builder import (
@@ -149,4 +150,42 @@ async def create_report(
         relationshipsMerged=relationships_merged,
         analysis=report_analysis.as_dict(),
     )
+
+
+@router.get("/reports")
+async def list_reports(
+    status: Optional[str] = Query(default=None, description="Filter status laporan"),
+    category_hint: Optional[str] = Query(default=None),
+    search: Optional[str] = Query(default=None, description="Cari pada deskripsi/id"),
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
+    _current_user: dict = Depends(require_roles(Role.ANALYST, Role.SUPERVISOR, Role.ADMIN)),
+    driver=Depends(get_driver),
+):
+    """Daftar laporan dummy dengan filter status/kategori dan pagination."""
+    repo = repo_or_503(driver)
+    result = await repo.list_nodes(
+        "Report",
+        filters={"status": status, "categoryHint": category_hint},
+        search=search,
+        search_fields=["id", "description", "label"],
+        order_by="createdAt",
+        limit=limit,
+        offset=offset,
+    )
+    return paginated(result)
+
+
+@router.get("/reports/{report_id}")
+async def get_report_detail(
+    report_id: str,
+    _current_user: dict = Depends(require_roles(Role.ANALYST, Role.SUPERVISOR, Role.ADMIN)),
+    driver=Depends(get_driver),
+):
+    """Detail satu laporan dummy berdasarkan id."""
+    repo = repo_or_503(driver)
+    node = await repo.get_node("Report", report_id)
+    if not node:
+        raise HTTPException(status_code=404, detail="Laporan tidak ditemukan")
+    return {"report": node}
 

@@ -13,7 +13,7 @@ from app.services.ai_engine.analysis import analyze_entity
 from app.services.ai_engine.artifacts import build_analysis_artifacts
 from app.services.ai_engine.graph import InMemoryGraph
 from app.services.ai_engine.models import AnalysisResult
-from app.services.ai_engine.scoring import RULES
+from app.services.ai_engine.scoring import RULES, RuleDefinition
 from app.services.ai_engine.search import (
     a_star_search,
     bfs_evidence_path,
@@ -232,9 +232,52 @@ async def list_scoring_rules(
                 "ruleId": rule.rule_id,
                 "title": rule.title,
                 "weight": rule.weight,
-                "editableInPrototype": False,
+                "editableInPrototype": True,
             }
             for rule in RULES.values()
         ]
+    }
+
+
+class RuleWeightUpdate(BaseModel):
+    weight: int = Field(ge=0, le=100)
+
+
+@router.patch("/rules/{rule_id}")
+async def update_rule_weight(
+    rule_id: str,
+    body: RuleWeightUpdate,
+    current_user: dict = Depends(require_roles(Role.ADMIN)),
+    driver=Depends(get_driver),
+):
+    """
+    Update bobot rule scoring (admin). Perubahan bersifat in-memory untuk
+    prototype dan dicatat ke audit log. Tidak persisten setelah restart.
+    """
+    existing = RULES.get(rule_id)
+    if existing is None:
+        raise HTTPException(status_code=404, detail="Rule tidak ditemukan")
+
+    old_weight = existing.weight
+    RULES[rule_id] = RuleDefinition(existing.rule_id, existing.title, body.weight)
+
+    if driver is not None:
+        repo = Neo4jRepository(driver)
+        await repo.write_audit_log(
+            actor_id=current_user["id"],
+            actor_role=current_user["role"],
+            action="UPDATE_RULE_WEIGHT",
+            target_id=rule_id,
+            target_type="Rule",
+            old_value=old_weight,
+            new_value=body.weight,
+            note=f"Bobot {rule_id} diubah dari {old_weight} ke {body.weight}",
+        )
+
+    return {
+        "ruleId": rule_id,
+        "title": existing.title,
+        "oldWeight": old_weight,
+        "weight": body.weight,
     }
 

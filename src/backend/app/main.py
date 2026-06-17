@@ -4,7 +4,21 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import close_driver, init_driver
-from app.routers import analysis, auth, health, import_data, reports
+from app.routers import (
+    admin,
+    alerts,
+    analysis,
+    auth,
+    blacklist,
+    dashboard,
+    entities,
+    export,
+    health,
+    import_data,
+    intel,
+    reports,
+    verification,
+)
 
 
 @asynccontextmanager
@@ -38,3 +52,11 @@ app.include_router(auth.router)
 app.include_router(reports.router)
 app.include_router(import_data.router)
 app.include_router(analysis.router)
+app.include_router(dashboard.router)
+app.include_router(entities.router)
+app.include_router(alerts.router)
+app.include_router(verification.router)
+app.include_router(blacklist.router)
+app.include_router(intel.router)
+app.include_router(export.router)
+app.include_router(admin.router)
