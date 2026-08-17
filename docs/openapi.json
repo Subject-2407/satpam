@@ -1,0 +1,6063 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SATPAM API",
+    "description": "Search-based AI Threat Prevention and Mapping — Prototype backend untuk sistem graph intelligence deteksi risiko judol/pinjol ilegal. Semua data bersifat dummy/simulasi.",
+    "version": "0.1.0-week1"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Health Check",
+        "description": "Cek status backend dan koneksi Neo4j.\n\nSelalu mengembalikan HTTP 200. Status \"degraded\" berarti Neo4j tidak tersedia.",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/token": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login",
+        "description": "OAuth2 password flow. Gunakan email sebagai username.\n\nSeed users (demo only):\n- reporter@satpam.test / reporter123\n- analyst@satpam.test  / analyst123\n- supervisor@satpam.test / supervisor123\n- admin@satpam.test    / admin123",
+        "operationId": "login_api_auth_token_post",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_login_api_auth_token_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reports": {
+      "post": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Create Report",
+        "description": "Process a dummy report through the AI engine and persist the graph.\n\nThe pipeline is: extraction -> normalization -> graph build -> scoring ->\nrisk artifacts. High/critical results open review artifacts only; no final\nblacklist or blocking action is produced automatically.",
+        "operationId": "create_report_api_reports_post",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportCreateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "List Reports",
+        "description": "Daftar laporan dummy dengan filter status/kategori dan pagination.",
+        "operationId": "list_reports_api_reports_get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter status laporan",
+              "title": "Status"
+            },
+            "description": "Filter status laporan"
+          },
+          {
+            "name": "category_hint",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Category Hint"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Cari pada deskripsi/id",
+              "title": "Search"
+            },
+            "description": "Cari pada deskripsi/id"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reports/{report_id}": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Get Report Detail",
+        "description": "Detail satu laporan dummy berdasarkan id.",
+        "operationId": "get_report_detail_api_reports__report_id__get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Report Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/import/dummy-data": {
+      "post": {
+        "tags": [
+          "import"
+        ],
+        "summary": "Import Dummy Data",
+        "description": "Import bulk dataset dummy ke Neo4j.\n\n- Hanya admin yang dapat mengakses endpoint ini.\n- MERGE digunakan sehingga import dapat diulang tanpa duplikasi node/relationship.\n- Semua data harus bersifat simulasi (simulationOnly metadata).",
+        "operationId": "import_dummy_data_api_import_dummy_data_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DummyDataImportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/entities/{node_type}/{node_id}": {
+      "get": {
+        "tags": [
+          "ai-engine"
+        ],
+        "summary": "Get Entity Detail",
+        "operationId": "get_entity_detail_api_entities__node_type___node_id__get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "node_type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Node Type"
+            }
+          },
+          {
+            "name": "node_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Node Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/graph/neighborhood/{node_type}/{node_id}": {
+      "get": {
+        "tags": [
+          "ai-engine"
+        ],
+        "summary": "Get Graph Neighborhood",
+        "operationId": "get_graph_neighborhood_api_graph_neighborhood__node_type___node_id__get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "node_type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Node Type"
+            }
+          },
+          {
+            "name": "node_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Node Id"
+            }
+          },
+          {
+            "name": "depth",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 5,
+              "minimum": 0,
+              "default": 3,
+              "title": "Depth"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 1000,
+              "minimum": 1,
+              "default": 150,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/analysis/path-search": {
+      "post": {
+        "tags": [
+          "ai-engine"
+        ],
+        "summary": "Run Path Search",
+        "operationId": "run_path_search_api_analysis_path_search_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PathSearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/analysis/{node_type}/{node_id}": {
+      "get": {
+        "tags": [
+          "ai-engine"
+        ],
+        "summary": "Get Risk Analysis",
+        "operationId": "get_risk_analysis_api_analysis__node_type___node_id__get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "node_type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Node Type"
+            }
+          },
+          {
+            "name": "node_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Node Id"
+            }
+          },
+          {
+            "name": "depth",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 5,
+              "minimum": 1,
+              "default": 3,
+              "title": "Depth"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 1000,
+              "minimum": 1,
+              "default": 250,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/alerts/early-warnings": {
+      "get": {
+        "tags": [
+          "ai-engine"
+        ],
+        "summary": "List Early Warnings",
+        "operationId": "list_early_warnings_api_alerts_early_warnings_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/analysis/rebuild": {
+      "post": {
+        "tags": [
+          "ai-engine"
+        ],
+        "summary": "Rebuild Analysis Artifacts",
+        "operationId": "rebuild_analysis_artifacts_api_analysis_rebuild_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/rules": {
+      "get": {
+        "tags": [
+          "ai-engine"
+        ],
+        "summary": "List Scoring Rules",
+        "operationId": "list_scoring_rules_api_rules_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/rules/{rule_id}": {
+      "patch": {
+        "tags": [
+          "ai-engine"
+        ],
+        "summary": "Update Rule Weight",
+        "description": "Update bobot rule scoring (admin). Perubahan bersifat in-memory untuk\nprototype dan dicatat ke audit log. Tidak persisten setelah restart.",
+        "operationId": "update_rule_weight_api_rules__rule_id__patch",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "rule_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Rule Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RuleWeightUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard/summary": {
+      "get": {
+        "tags": [
+          "dashboard"
+        ],
+        "summary": "Dashboard Summary",
+        "description": "Ringkasan dashboard: jumlah laporan, entitas, alert, verification case, dan\nblacklist candidate; breakdown risk level; status breakdown; serta entitas\nberisiko tertinggi. Bahasa indikatif — bukan vonis.",
+        "operationId": "dashboard_summary_api_dashboard_summary_get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "top_entities",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 50,
+              "minimum": 1,
+              "default": 5,
+              "title": "Top Entities"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/entities": {
+      "get": {
+        "tags": [
+          "entities"
+        ],
+        "summary": "Search Entities",
+        "description": "Cari entitas indikator lintas tipe (atau satu tipe), dengan filter risk level,\nverification status, dan teks. Hasil diurutkan berdasarkan risk score menurun.",
+        "operationId": "search_entities_api_entities_get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter satu tipe node entitas",
+              "title": "Type"
+            },
+            "description": "Filter satu tipe node entitas"
+          },
+          {
+            "name": "risk_level",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "low|medium|high|critical",
+              "title": "Risk Level"
+            },
+            "description": "low|medium|high|critical"
+          },
+          {
+            "name": "verification_status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Verification Status"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Cari pada id/value entitas",
+              "title": "Search"
+            },
+            "description": "Cari pada id/value entitas"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/alerts": {
+      "get": {
+        "tags": [
+          "alerts"
+        ],
+        "summary": "List Alerts",
+        "description": "Daftar alert/early warning yang dipersistensikan.\n\nAlert dihitung ulang dari graph saat ini dan di-upsert (status review\ndipertahankan), lalu dikembalikan dengan filter status/priority.",
+        "operationId": "list_alerts_api_alerts_get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "priority",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Priority"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/alerts/{alert_id}/status": {
+      "patch": {
+        "tags": [
+          "alerts"
+        ],
+        "summary": "Update Alert Status",
+        "description": "Update status review sebuah alert dan catat ke audit log.",
+        "operationId": "update_alert_status_api_alerts__alert_id__status_patch",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "alert_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Alert Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AlertStatusUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/verification-cases": {
+      "get": {
+        "tags": [
+          "verification"
+        ],
+        "summary": "List Verification Cases",
+        "description": "Daftar verification case dengan filter status/risk level.",
+        "operationId": "list_verification_cases_api_verification_cases_get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "risk_level",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Risk Level"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/verification-cases/{case_id}": {
+      "get": {
+        "tags": [
+          "verification"
+        ],
+        "summary": "Get Verification Case",
+        "description": "Detail satu verification case.",
+        "operationId": "get_verification_case_api_verification_cases__case_id__get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "verification"
+        ],
+        "summary": "Update Verification Case",
+        "description": "Update status verifikasi dan catatan reviewer; dicatat ke audit log.",
+        "operationId": "update_verification_case_api_verification_cases__case_id__patch",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "case_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Case Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blacklist-candidates": {
+      "get": {
+        "tags": [
+          "blacklist"
+        ],
+        "summary": "List Blacklist Candidates",
+        "description": "Daftar kandidat blacklist dengan filter tipe entitas/status.",
+        "operationId": "list_blacklist_candidates_api_blacklist_candidates_get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter entityType kandidat",
+              "title": "Type"
+            },
+            "description": "Filter entityType kandidat"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blacklist-candidates/{candidate_id}": {
+      "get": {
+        "tags": [
+          "blacklist"
+        ],
+        "summary": "Get Blacklist Candidate",
+        "description": "Detail satu kandidat blacklist.",
+        "operationId": "get_blacklist_candidate_api_blacklist_candidates__candidate_id__get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "candidate_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Candidate Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blacklist-candidates/{candidate_id}/decision": {
+      "patch": {
+        "tags": [
+          "blacklist"
+        ],
+        "summary": "Decide Blacklist Candidate",
+        "description": "Update keputusan kandidat blacklist. Status final (confirmed_blacklist /\nrecommended_for_blocking) hanya boleh diambil supervisor/admin. Dicatat ke\naudit log.",
+        "operationId": "decide_blacklist_candidate_api_blacklist_candidates__candidate_id__decision_patch",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "candidate_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Candidate Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CandidateDecision"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/traffic-events": {
+      "get": {
+        "tags": [
+          "intel"
+        ],
+        "summary": "List Traffic Events",
+        "description": "Daftar traffic event simulasi.",
+        "operationId": "list_traffic_events_api_traffic_events_get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "event_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Event Type"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/traffic-events/import": {
+      "post": {
+        "tags": [
+          "intel"
+        ],
+        "summary": "Import Traffic Events",
+        "description": "Import traffic log simulasi (admin). simulationOnly wajib True.",
+        "operationId": "import_traffic_events_api_traffic_events_import_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrafficImportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/crawler-findings": {
+      "get": {
+        "tags": [
+          "intel"
+        ],
+        "summary": "List Crawler Findings",
+        "description": "Daftar crawler finding dummy.",
+        "operationId": "list_crawler_findings_api_crawler_findings_get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "finding_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Finding Type"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/crawler-findings/import": {
+      "post": {
+        "tags": [
+          "intel"
+        ],
+        "summary": "Import Crawler Findings",
+        "description": "Import crawler finding dummy (admin). simulationOnly wajib True.",
+        "operationId": "import_crawler_findings_api_crawler_findings_import_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrawlerImportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/export/analysis/{node_type}/{node_id}": {
+      "get": {
+        "tags": [
+          "export"
+        ],
+        "summary": "Export Analysis",
+        "description": "Export hasil analisis sebuah entitas dalam format JSON atau Markdown.",
+        "operationId": "export_analysis_api_export_analysis__node_type___node_id__get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "node_type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Node Type"
+            }
+          },
+          {
+            "name": "node_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Node Id"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "json",
+                "markdown"
+              ],
+              "type": "string",
+              "default": "json",
+              "title": "Format"
+            }
+          },
+          {
+            "name": "depth",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 5,
+              "minimum": 1,
+              "default": 3,
+              "title": "Depth"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 1000,
+              "minimum": 1,
+              "default": 250,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/reset-dataset": {
+      "delete": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Reset Dataset",
+        "description": "Hapus seluruh node & relationship prototype (admin only). Setelah reset,\nsebuah audit log dibuat sebagai jejak aksi.",
+        "operationId": "reset_dataset_api_admin_reset_dataset_delete",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/audit-logs": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "List Audit Logs",
+        "description": "Daftar audit log (supervisor/admin), terbaru lebih dulu.",
+        "operationId": "list_audit_logs_api_audit_logs_get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "action",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Action"
+            }
+          },
+          {
+            "name": "target_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Target Type"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "APKNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "APK",
+            "title": "Type",
+            "default": "APK"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "appName": {
+            "type": "string",
+            "title": "Appname"
+          },
+          "packageName": {
+            "type": "string",
+            "title": "Packagename"
+          },
+          "requestedPermissions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Requestedpermissions",
+            "default": []
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "appName",
+          "packageName"
+        ],
+        "title": "APKNode"
+      },
+      "AlertStatusUpdate": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "AlertStatusUpdate"
+      },
+      "AppInput": {
+        "properties": {
+          "appName": {
+            "type": "string",
+            "title": "Appname"
+          },
+          "packageName": {
+            "type": "string",
+            "title": "Packagename"
+          }
+        },
+        "type": "object",
+        "required": [
+          "appName",
+          "packageName"
+        ],
+        "title": "AppInput"
+      },
+      "AuditLogNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "AuditLog",
+            "title": "Type",
+            "default": "AuditLog"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "actorId": {
+            "type": "string",
+            "title": "Actorid"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "targetId": {
+            "type": "string",
+            "title": "Targetid"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "actorId",
+          "action",
+          "targetId",
+          "timestamp"
+        ],
+        "title": "AuditLogNode"
+      },
+      "BankAccountInput": {
+        "properties": {
+          "bankName": {
+            "type": "string",
+            "title": "Bankname"
+          },
+          "accountAlias": {
+            "type": "string",
+            "title": "Accountalias"
+          },
+          "maskedAccountNumber": {
+            "type": "string",
+            "title": "Maskedaccountnumber"
+          }
+        },
+        "type": "object",
+        "required": [
+          "bankName",
+          "accountAlias",
+          "maskedAccountNumber"
+        ],
+        "title": "BankAccountInput"
+      },
+      "BankAccountNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "BankAccount",
+            "title": "Type",
+            "default": "BankAccount"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "bankName": {
+            "type": "string",
+            "title": "Bankname"
+          },
+          "accountAlias": {
+            "type": "string",
+            "title": "Accountalias"
+          },
+          "maskedAccountNumber": {
+            "type": "string",
+            "title": "Maskedaccountnumber"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "bankName",
+          "accountAlias",
+          "maskedAccountNumber"
+        ],
+        "title": "BankAccountNode"
+      },
+      "BlacklistCandidateNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "BlacklistCandidate",
+            "title": "Type",
+            "default": "BlacklistCandidate"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "entityId": {
+            "type": "string",
+            "title": "Entityid"
+          },
+          "candidateReason": {
+            "type": "string",
+            "title": "Candidatereason"
+          },
+          "recommendedAction": {
+            "type": "string",
+            "title": "Recommendedaction"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "entityId",
+          "candidateReason",
+          "recommendedAction",
+          "status"
+        ],
+        "title": "BlacklistCandidateNode"
+      },
+      "BlacklistDecisionNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "BlacklistDecision",
+            "title": "Type",
+            "default": "BlacklistDecision"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "decision": {
+            "type": "string",
+            "title": "Decision"
+          },
+          "reviewerId": {
+            "type": "string",
+            "title": "Reviewerid"
+          },
+          "decisionNote": {
+            "type": "string",
+            "title": "Decisionnote"
+          },
+          "decidedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Decidedat"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "decision",
+          "reviewerId",
+          "decisionNote",
+          "decidedAt"
+        ],
+        "title": "BlacklistDecisionNode"
+      },
+      "BlacklistEntityNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "BlacklistEntity",
+            "title": "Type",
+            "default": "BlacklistEntity"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "entityType": {
+            "type": "string",
+            "title": "Entitytype"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ],
+            "title": "Severity"
+          },
+          "entityId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Entityid"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "entityType",
+          "reason",
+          "severity"
+        ],
+        "title": "BlacklistEntityNode"
+      },
+      "Body_login_api_auth_token_post": {
+        "properties": {
+          "grant_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^password$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grant Type"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "title": "Password"
+          },
+          "scope": {
+            "type": "string",
+            "title": "Scope",
+            "default": ""
+          },
+          "client_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Id"
+          },
+          "client_secret": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "format": "password",
+            "title": "Client Secret"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "Body_login_api_auth_token_post"
+      },
+      "CandidateDecision": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "decisionNote": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decisionnote"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "CandidateDecision"
+      },
+      "ClusterNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "Cluster",
+            "title": "Type",
+            "default": "Cluster"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "clusterType": {
+            "type": "string",
+            "title": "Clustertype"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "name",
+          "clusterType"
+        ],
+        "title": "ClusterNode"
+      },
+      "ConfidenceLevel": {
+        "type": "string",
+        "enum": [
+          "low",
+          "medium",
+          "high"
+        ],
+        "title": "ConfidenceLevel"
+      },
+      "CrawlerFindingNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "CrawlerFinding",
+            "title": "Type",
+            "default": "CrawlerFinding"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "findingType": {
+            "type": "string",
+            "title": "Findingtype"
+          },
+          "sourceUrl": {
+            "type": "string",
+            "title": "Sourceurl"
+          },
+          "contentSummary": {
+            "type": "string",
+            "title": "Contentsummary"
+          },
+          "matchedKeywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Matchedkeywords",
+            "default": []
+          },
+          "capturedAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Capturedat"
+          },
+          "simulationOnly": {
+            "type": "boolean",
+            "const": true,
+            "title": "Simulationonly",
+            "default": true
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "findingType",
+          "sourceUrl",
+          "contentSummary",
+          "capturedAt"
+        ],
+        "title": "CrawlerFindingNode",
+        "description": "Temuan crawler dummy — simulation_only wajib True."
+      },
+      "CrawlerImportRequest": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CrawlerFindingNode"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "CrawlerImportRequest"
+      },
+      "DatasetMetadata": {
+        "properties": {
+          "datasetId": {
+            "type": "string",
+            "title": "Datasetid"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "scope": {
+            "type": "string",
+            "title": "Scope"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "simulationOnly": {
+            "type": "boolean",
+            "title": "Simulationonly"
+          },
+          "dataPolicy": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Datapolicy"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "datasetId",
+          "version",
+          "scope",
+          "createdAt",
+          "simulationOnly",
+          "dataPolicy"
+        ],
+        "title": "DatasetMetadata"
+      },
+      "DemoScenario": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "seedReportIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Seedreportids",
+            "default": []
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "description"
+        ],
+        "title": "DemoScenario"
+      },
+      "DomainNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "Domain",
+            "title": "Type",
+            "default": "Domain"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "domainName": {
+            "type": "string",
+            "title": "Domainname"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "domainName",
+          "category"
+        ],
+        "title": "DomainNode"
+      },
+      "DummyDataImportRequest": {
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/DatasetMetadata"
+          },
+          "nodes": {
+            "$ref": "#/components/schemas/NodesContainer"
+          },
+          "relationships": {
+            "items": {
+              "$ref": "#/components/schemas/RelationshipModel"
+            },
+            "type": "array",
+            "title": "Relationships",
+            "default": []
+          },
+          "demoScenarios": {
+            "items": {
+              "$ref": "#/components/schemas/DemoScenario"
+            },
+            "type": "array",
+            "title": "Demoscenarios",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "metadata",
+          "nodes"
+        ],
+        "title": "DummyDataImportRequest",
+        "description": "Payload untuk endpoint POST /api/import/dummy-data."
+      },
+      "EWalletNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "EWallet",
+            "title": "Type",
+            "default": "EWallet"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "provider": {
+            "type": "string",
+            "title": "Provider"
+          },
+          "walletAlias": {
+            "type": "string",
+            "title": "Walletalias"
+          },
+          "maskedWalletId": {
+            "type": "string",
+            "title": "Maskedwalletid"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "provider",
+          "walletAlias",
+          "maskedWalletId"
+        ],
+        "title": "EWalletNode"
+      },
+      "EvidenceNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "Evidence",
+            "title": "Type",
+            "default": "Evidence"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "evidenceType": {
+            "type": "string",
+            "title": "Evidencetype"
+          },
+          "contentSummary": {
+            "type": "string",
+            "title": "Contentsummary"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "evidenceType",
+          "contentSummary"
+        ],
+        "title": "EvidenceNode"
+      },
+      "GraphUserNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "User",
+            "title": "Type",
+            "default": "User"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "name",
+          "role",
+          "status"
+        ],
+        "title": "GraphUserNode",
+        "description": "User node dalam graph (bukan auth user) — merepresentasikan aktor/reviewer dalam data."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ImportResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "stats": {
+            "$ref": "#/components/schemas/ImportStats"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "stats",
+          "message"
+        ],
+        "title": "ImportResponse"
+      },
+      "ImportStats": {
+        "properties": {
+          "nodes_merged": {
+            "type": "integer",
+            "title": "Nodes Merged",
+            "default": 0
+          },
+          "relationships_merged": {
+            "type": "integer",
+            "title": "Relationships Merged",
+            "default": 0
+          },
+          "skipped": {
+            "type": "integer",
+            "title": "Skipped",
+            "default": 0
+          },
+          "errors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Errors",
+            "default": []
+          }
+        },
+        "type": "object",
+        "title": "ImportStats"
+      },
+      "KeywordNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "Keyword",
+            "title": "Type",
+            "default": "Keyword"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "keyword": {
+            "type": "string",
+            "title": "Keyword"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "weight": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Weight",
+            "default": 0
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "keyword",
+          "category"
+        ],
+        "title": "KeywordNode"
+      },
+      "LinkShortenerNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "LinkShortener",
+            "title": "Type",
+            "default": "LinkShortener"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "shortUrl": {
+            "type": "string",
+            "title": "Shorturl"
+          },
+          "provider": {
+            "type": "string",
+            "title": "Provider"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "shortUrl",
+          "provider"
+        ],
+        "title": "LinkShortenerNode"
+      },
+      "NodesContainer": {
+        "properties": {
+          "reports": {
+            "items": {
+              "$ref": "#/components/schemas/ReportNode"
+            },
+            "type": "array",
+            "title": "Reports",
+            "default": []
+          },
+          "victims": {
+            "items": {
+              "$ref": "#/components/schemas/VictimNode"
+            },
+            "type": "array",
+            "title": "Victims",
+            "default": []
+          },
+          "urls": {
+            "items": {
+              "$ref": "#/components/schemas/URLNode"
+            },
+            "type": "array",
+            "title": "Urls",
+            "default": []
+          },
+          "domains": {
+            "items": {
+              "$ref": "#/components/schemas/DomainNode"
+            },
+            "type": "array",
+            "title": "Domains",
+            "default": []
+          },
+          "linkShorteners": {
+            "items": {
+              "$ref": "#/components/schemas/LinkShortenerNode"
+            },
+            "type": "array",
+            "title": "Linkshorteners",
+            "default": []
+          },
+          "socialMediaAccounts": {
+            "items": {
+              "$ref": "#/components/schemas/SocialMediaAccountNode"
+            },
+            "type": "array",
+            "title": "Socialmediaaccounts",
+            "default": []
+          },
+          "phoneNumbers": {
+            "items": {
+              "$ref": "#/components/schemas/PhoneNumberNode"
+            },
+            "type": "array",
+            "title": "Phonenumbers",
+            "default": []
+          },
+          "bankAccounts": {
+            "items": {
+              "$ref": "#/components/schemas/BankAccountNode"
+            },
+            "type": "array",
+            "title": "Bankaccounts",
+            "default": []
+          },
+          "eWallets": {
+            "items": {
+              "$ref": "#/components/schemas/EWalletNode"
+            },
+            "type": "array",
+            "title": "Ewallets",
+            "default": []
+          },
+          "qrisMerchants": {
+            "items": {
+              "$ref": "#/components/schemas/QRISMerchantNode"
+            },
+            "type": "array",
+            "title": "Qrismerchants",
+            "default": []
+          },
+          "apks": {
+            "items": {
+              "$ref": "#/components/schemas/APKNode"
+            },
+            "type": "array",
+            "title": "Apks",
+            "default": []
+          },
+          "keywords": {
+            "items": {
+              "$ref": "#/components/schemas/KeywordNode"
+            },
+            "type": "array",
+            "title": "Keywords",
+            "default": []
+          },
+          "transactions": {
+            "items": {
+              "$ref": "#/components/schemas/TransactionNode"
+            },
+            "type": "array",
+            "title": "Transactions",
+            "default": []
+          },
+          "trafficEvents": {
+            "items": {
+              "$ref": "#/components/schemas/TrafficEventNode"
+            },
+            "type": "array",
+            "title": "Trafficevents",
+            "default": []
+          },
+          "crawlerFindings": {
+            "items": {
+              "$ref": "#/components/schemas/CrawlerFindingNode"
+            },
+            "type": "array",
+            "title": "Crawlerfindings",
+            "default": []
+          },
+          "blacklistEntities": {
+            "items": {
+              "$ref": "#/components/schemas/BlacklistEntityNode"
+            },
+            "type": "array",
+            "title": "Blacklistentities",
+            "default": []
+          },
+          "blacklistCandidates": {
+            "items": {
+              "$ref": "#/components/schemas/BlacklistCandidateNode"
+            },
+            "type": "array",
+            "title": "Blacklistcandidates",
+            "default": []
+          },
+          "blacklistDecisions": {
+            "items": {
+              "$ref": "#/components/schemas/BlacklistDecisionNode"
+            },
+            "type": "array",
+            "title": "Blacklistdecisions",
+            "default": []
+          },
+          "clusters": {
+            "items": {
+              "$ref": "#/components/schemas/ClusterNode"
+            },
+            "type": "array",
+            "title": "Clusters",
+            "default": []
+          },
+          "evidences": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceNode"
+            },
+            "type": "array",
+            "title": "Evidences",
+            "default": []
+          },
+          "riskAssessments": {
+            "items": {
+              "$ref": "#/components/schemas/RiskAssessmentNode"
+            },
+            "type": "array",
+            "title": "Riskassessments",
+            "default": []
+          },
+          "verificationCases": {
+            "items": {
+              "$ref": "#/components/schemas/VerificationCaseNode"
+            },
+            "type": "array",
+            "title": "Verificationcases",
+            "default": []
+          },
+          "recommendations": {
+            "items": {
+              "$ref": "#/components/schemas/RecommendationNode"
+            },
+            "type": "array",
+            "title": "Recommendations",
+            "default": []
+          },
+          "users": {
+            "items": {
+              "$ref": "#/components/schemas/GraphUserNode"
+            },
+            "type": "array",
+            "title": "Users",
+            "default": []
+          },
+          "auditLogs": {
+            "items": {
+              "$ref": "#/components/schemas/AuditLogNode"
+            },
+            "type": "array",
+            "title": "Auditlogs",
+            "default": []
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "NodesContainer",
+        "description": "Semua koleksi node dalam satu dataset dummy SATPAM."
+      },
+      "PathSearchRequest": {
+        "properties": {
+          "nodeType": {
+            "type": "string",
+            "title": "Nodetype"
+          },
+          "nodeId": {
+            "type": "string",
+            "title": "Nodeid"
+          },
+          "algorithm": {
+            "type": "string",
+            "enum": [
+              "BFS",
+              "UCS",
+              "BIDIRECTIONAL",
+              "A_STAR"
+            ],
+            "title": "Algorithm",
+            "default": "BFS"
+          },
+          "maxDepth": {
+            "type": "integer",
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Maxdepth",
+            "default": 3
+          },
+          "limit": {
+            "type": "integer",
+            "maximum": 1000.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "default": 250
+          }
+        },
+        "type": "object",
+        "required": [
+          "nodeType",
+          "nodeId"
+        ],
+        "title": "PathSearchRequest"
+      },
+      "PhoneNumberNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "PhoneNumber",
+            "title": "Type",
+            "default": "PhoneNumber"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "normalizedNumber": {
+            "type": "string",
+            "title": "Normalizednumber"
+          },
+          "countryCode": {
+            "type": "string",
+            "title": "Countrycode"
+          },
+          "reportCount": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Reportcount",
+            "default": 0
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "normalizedNumber",
+          "countryCode"
+        ],
+        "title": "PhoneNumberNode"
+      },
+      "QRISMerchantNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "QRISMerchant",
+            "title": "Type",
+            "default": "QRISMerchant"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "merchantAlias": {
+            "type": "string",
+            "title": "Merchantalias"
+          },
+          "merchantCategory": {
+            "type": "string",
+            "title": "Merchantcategory"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "merchantAlias",
+          "merchantCategory"
+        ],
+        "title": "QRISMerchantNode"
+      },
+      "RecommendationNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "Recommendation",
+            "title": "Type",
+            "default": "Recommendation"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "actionType": {
+            "type": "string",
+            "title": "Actiontype"
+          },
+          "priority": {
+            "type": "string",
+            "title": "Priority"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "actionType",
+          "priority",
+          "reason"
+        ],
+        "title": "RecommendationNode"
+      },
+      "RelationshipEndpoint": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "RelationshipEndpoint"
+      },
+      "RelationshipModel": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "from": {
+            "$ref": "#/components/schemas/RelationshipEndpoint"
+          },
+          "to": {
+            "$ref": "#/components/schemas/RelationshipEndpoint"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "confidence": {
+            "$ref": "#/components/schemas/ConfidenceLevel"
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Weight"
+          },
+          "evidenceId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Evidenceid"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "from",
+          "to",
+          "source",
+          "confidence",
+          "weight",
+          "createdAt"
+        ],
+        "title": "RelationshipModel",
+        "description": "Edge dalam graph SATPAM. Semua data adalah simulasi."
+      },
+      "ReportCreateRequest": {
+        "properties": {
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "default": "user_report"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "categoryHint": {
+            "type": "string",
+            "enum": [
+              "judol",
+              "pinjol_illegal",
+              "cross_ecosystem",
+              "payment_flow",
+              "traffic_crawler",
+              "benign"
+            ],
+            "title": "Categoryhint"
+          },
+          "urls": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Urls"
+          },
+          "phoneNumbers": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phonenumbers"
+          },
+          "bankAccounts": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/BankAccountInput"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bankaccounts"
+          },
+          "apps": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/AppInput"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Apps"
+          }
+        },
+        "type": "object",
+        "required": [
+          "description",
+          "categoryHint"
+        ],
+        "title": "ReportCreateRequest"
+      },
+      "ReportCreateResponse": {
+        "properties": {
+          "reportId": {
+            "type": "string",
+            "title": "Reportid"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "extractedEntities": {
+            "type": "integer",
+            "title": "Extractedentities",
+            "default": 0
+          },
+          "nodesMerged": {
+            "type": "integer",
+            "title": "Nodesmerged",
+            "default": 0
+          },
+          "relationshipsMerged": {
+            "type": "integer",
+            "title": "Relationshipsmerged",
+            "default": 0
+          },
+          "analysis": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Analysis"
+          }
+        },
+        "type": "object",
+        "required": [
+          "reportId",
+          "status",
+          "message"
+        ],
+        "title": "ReportCreateResponse"
+      },
+      "ReportNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "Report",
+            "title": "Type",
+            "default": "Report"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "new",
+              "auto_triaged",
+              "needs_review",
+              "closed"
+            ],
+            "title": "Status",
+            "default": "new"
+          },
+          "categoryHint": {
+            "type": "string",
+            "enum": [
+              "judol",
+              "pinjol_illegal",
+              "cross_ecosystem",
+              "payment_flow",
+              "traffic_crawler",
+              "benign"
+            ],
+            "title": "Categoryhint"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "description",
+          "categoryHint"
+        ],
+        "title": "ReportNode"
+      },
+      "RiskAssessmentNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "RiskAssessment",
+            "title": "Type",
+            "default": "RiskAssessment"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "score": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Score"
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ],
+            "title": "Level"
+          },
+          "explanation": {
+            "type": "string",
+            "title": "Explanation"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "score",
+          "level",
+          "explanation"
+        ],
+        "title": "RiskAssessmentNode"
+      },
+      "RiskLevel": {
+        "type": "string",
+        "enum": [
+          "low",
+          "medium",
+          "high",
+          "critical"
+        ],
+        "title": "RiskLevel"
+      },
+      "RuleWeightUpdate": {
+        "properties": {
+          "weight": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Weight"
+          }
+        },
+        "type": "object",
+        "required": [
+          "weight"
+        ],
+        "title": "RuleWeightUpdate"
+      },
+      "SocialMediaAccountNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "SocialMediaAccount",
+            "title": "Type",
+            "default": "SocialMediaAccount"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "platform": {
+            "type": "string",
+            "title": "Platform"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "profileUrl": {
+            "type": "string",
+            "title": "Profileurl"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "platform",
+          "username",
+          "profileUrl"
+        ],
+        "title": "SocialMediaAccountNode"
+      },
+      "Token": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "token_type",
+          "role",
+          "user_id"
+        ],
+        "title": "Token"
+      },
+      "TrafficEventNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "TrafficEvent",
+            "title": "Type",
+            "default": "TrafficEvent"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "eventType": {
+            "type": "string",
+            "title": "Eventtype"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp"
+          },
+          "sourceAlias": {
+            "type": "string",
+            "title": "Sourcealias"
+          },
+          "destinationDomain": {
+            "type": "string",
+            "title": "Destinationdomain"
+          },
+          "requestCount": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Requestcount",
+            "default": 0
+          },
+          "simulationOnly": {
+            "type": "boolean",
+            "const": true,
+            "title": "Simulationonly",
+            "default": true
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "eventType",
+          "timestamp",
+          "sourceAlias",
+          "destinationDomain"
+        ],
+        "title": "TrafficEventNode",
+        "description": "Log trafik simulasi — simulation_only wajib True."
+      },
+      "TrafficImportRequest": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/TrafficEventNode"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "TrafficImportRequest"
+      },
+      "TransactionNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "Transaction",
+            "title": "Type",
+            "default": "Transaction"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "amount": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Amount"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Timestamp"
+          },
+          "channel": {
+            "type": "string",
+            "title": "Channel"
+          },
+          "transactionType": {
+            "type": "string",
+            "title": "Transactiontype"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "amount",
+          "timestamp",
+          "channel",
+          "transactionType"
+        ],
+        "title": "TransactionNode"
+      },
+      "URLNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "URL",
+            "title": "Type",
+            "default": "URL"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "rawUrl": {
+            "type": "string",
+            "title": "Rawurl"
+          },
+          "normalizedUrl": {
+            "type": "string",
+            "title": "Normalizedurl"
+          },
+          "domain": {
+            "type": "string",
+            "title": "Domain"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "rawUrl",
+          "normalizedUrl",
+          "domain"
+        ],
+        "title": "URLNode"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VerificationCaseNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "VerificationCase",
+            "title": "Type",
+            "default": "VerificationCase"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "reviewerId": {
+            "type": "string",
+            "title": "Reviewerid"
+          },
+          "decisionNote": {
+            "type": "string",
+            "title": "Decisionnote"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "status",
+          "reviewerId",
+          "decisionNote"
+        ],
+        "title": "VerificationCaseNode"
+      },
+      "VerificationStatus": {
+        "type": "string",
+        "enum": [
+          "unreviewed",
+          "needs_review",
+          "verified_risk",
+          "false_positive",
+          "escalated",
+          "closed"
+        ],
+        "title": "VerificationStatus"
+      },
+      "VerificationUpdate": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "decisionNote": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decisionnote"
+          },
+          "reviewerId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reviewerid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "VerificationUpdate"
+      },
+      "VictimNode": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "const": "Victim",
+            "title": "Type",
+            "default": "Victim"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Createdat"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "firstSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Firstseenat"
+          },
+          "lastSeenAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastseenat"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "riskScore": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Riskscore"
+          },
+          "riskLevel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus",
+            "default": "unreviewed"
+          },
+          "alias": {
+            "type": "string",
+            "title": "Alias"
+          },
+          "riskExposureLevel": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Riskexposurelevel"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "source",
+          "createdAt",
+          "alias",
+          "riskExposureLevel"
+        ],
+        "title": "VictimNode"
+      }
+    },
+    "securitySchemes": {
+      "OAuth2PasswordBearer": {
+        "type": "oauth2",
+        "flows": {
+          "password": {
+            "scopes": {},
+            "tokenUrl": "/api/auth/token"
+          }
+        }
+      }
+    }
+  }
+}
