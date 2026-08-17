@@ -1,0 +1,399 @@
+{
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47
+  ],
+  "epochs": 200,
+  "patience": 30,
+  "num_bases": null,
+  "add_reverse": true,
+  "label_protocol": "weak_labels only; gt_illicit dipakai hanya untuk evaluasi",
+  "selection_metric": "val AUPRC terhadap weak label",
+  "primary_metric": "auprc",
+  "primary_scope": "entity (6 tipe, tanpa report/victim)",
+  "seed_addition_note": "Eksperimen awal memakai 5 seed (42-46). Seed 47 ditambahkan SETELAH melihat hasil lima seed, dengan alasan statistik: pada n=5 p-value dua sisi eksak Wilcoxon berbatas bawah 0,0625, sehingga dua perbandingan yang sudah menang 5/5 seed mustahil mencapai p < 0,05 berapa pun besar efeknya. Seed keenam menurunkan batas ke 0,03125. Keputusan diambil sebelum seed 47 dibangkitkan; seed 47 dipakai apa adanya setelah lolos 16 cek validasi generator. Tidak ada seed yang dibuang atau dipilih berdasarkan hasilnya. Penambahan ini mengubah resolusi statistik saja: arah dan pola kemenangan seluruh perbandingan tetap sama seperti pada lima seed.",
+  "python": "3.14.6",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "library_versions": {
+    "torch": "2.13.0+cpu",
+    "torch_geometric": "2.8.0.post1",
+    "pandas": "3.0.5",
+    "numpy": "2.5.1",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.18.0",
+    "xgboost": "3.3.0"
+  },
+  "total_elapsed_s": 260.41136350000306,
+  "per_seed": [
+    {
+      "seed": 42,
+      "elapsed_s": 51.28804990000208,
+      "num_nodes": 5000,
+      "num_edges_directed": 18447,
+      "num_edges_flat": 36894,
+      "num_relations": 16,
+      "num_canonical_edge_types": 27,
+      "weak_positive_levels": [
+        "high",
+        "critical"
+      ],
+      "weak_label_coverage": 1.0,
+      "weak_positive_rate_loss_nodes": 0.40158671140670776,
+      "gt_positive_rate_test_entity": 0.09262435883283615,
+      "loss_nodes": 2647,
+      "feature_stats": {
+        "log1p_columns": [
+          "feat_txn_amount_sum",
+          "feat_txn_count"
+        ],
+        "standardized_per_node_type": true,
+        "fit_on_split": "train",
+        "constant_columns_per_type": {
+          "domain": [
+            "feat_txn_count",
+            "feat_txn_amount_sum"
+          ],
+          "phone": [
+            "feat_txn_count",
+            "feat_txn_amount_sum",
+            "feat_kw_score"
+          ],
+          "bank_account": [
+            "feat_kw_score"
+          ],
+          "ewallet": [
+            "feat_kw_score"
+          ],
+          "apk": [
+            "feat_txn_count",
+            "feat_txn_amount_sum"
+          ],
+          "social_account": [
+            "feat_txn_count",
+            "feat_txn_amount_sum"
+          ],
+          "report": [
+            "feat_report_count",
+            "feat_txn_count",
+            "feat_txn_amount_sum",
+            "feat_kw_score"
+          ],
+          "victim": [
+            "feat_degree_in",
+            "feat_report_count",
+            "feat_kw_score"
+          ]
+        }
+      }
+    },
+    {
+      "seed": 43,
+      "elapsed_s": 29.33519630000228,
+      "num_nodes": 5000,
+      "num_edges_directed": 18207,
+      "num_edges_flat": 36414,
+      "num_relations": 16,
+      "num_canonical_edge_types": 27,
+      "weak_positive_levels": [
+        "high",
+        "critical"
+      ],
+      "weak_label_coverage": 1.0,
+      "weak_positive_rate_loss_nodes": 0.47980552911758423,
+      "gt_positive_rate_test_entity": 0.06548672914505005,
+      "loss_nodes": 2674,
+      "feature_stats": {
+        "log1p_columns": [
+          "feat_txn_amount_sum",
+          "feat_txn_count"
+        ],
+        "standardized_per_node_type": true,
+        "fit_on_split": "train",
+        "constant_columns_per_type": {
+          "domain": [
+            "feat_txn_count",
+            "feat_txn_amount_sum"
+          ],
+          "phone": [
+            "feat_txn_count",
+            "feat_txn_amount_sum",
+            "feat_kw_score"
+          ],
+          "bank_account": [
+            "feat_kw_score"
+          ],
+          "ewallet": [
+            "feat_kw_score"
+          ],
+          "apk": [
+            "feat_txn_count",
+            "feat_txn_amount_sum"
+          ],
+          "social_account": [
+            "feat_txn_count",
+            "feat_txn_amount_sum"
+          ],
+          "report": [
+            "feat_report_count",
+            "feat_txn_count",
+            "feat_txn_amount_sum",
+            "feat_kw_score"
+          ],
+          "victim": [
+            "feat_degree_in",
+            "feat_report_count",
+            "feat_kw_score"
+          ]
+        }
+      }
+    },
+    {
+      "seed": 44,
+      "elapsed_s": 35.705052599994815,
+      "num_nodes": 5000,
+      "num_edges_directed": 18392,
+      "num_edges_flat": 36784,
+      "num_relations": 16,
+      "num_canonical_edge_types": 27,
+      "weak_positive_levels": [
+        "high",
+        "critical"
+      ],
+      "weak_label_coverage": 1.0,
+      "weak_positive_rate_loss_nodes": 0.40816327929496765,
+      "gt_positive_rate_test_entity": 0.03368794173002243,
+      "loss_nodes": 2646,
+      "feature_stats": {
+        "log1p_columns": [
+          "feat_txn_amount_sum",
+          "feat_txn_count"
+        ],
+        "standardized_per_node_type": true,
+        "fit_on_split": "train",
+        "constant_columns_per_type": {
+          "domain": [
+            "feat_txn_count",
+            "feat_txn_amount_sum"
+          ],
+          "phone": [
+            "feat_txn_count",
+            "feat_txn_amount_sum",
+            "feat_kw_score"
+          ],
+          "bank_account": [
+            "feat_kw_score"
+          ],
+          "ewallet": [
+            "feat_kw_score"
+          ],
+          "apk": [
+            "feat_txn_count",
+            "feat_txn_amount_sum"
+          ],
+          "social_account": [
+            "feat_txn_count",
+            "feat_txn_amount_sum"
+          ],
+          "report": [
+            "feat_report_count",
+            "feat_txn_count",
+            "feat_txn_amount_sum",
+            "feat_kw_score"
+          ],
+          "victim": [
+            "feat_degree_in",
+            "feat_report_count",
+            "feat_kw_score"
+          ]
+        }
+      }
+    },
+    {
+      "seed": 45,
+      "elapsed_s": 38.55834280000272,
+      "num_nodes": 5000,
+      "num_edges_directed": 18350,
+      "num_edges_flat": 36700,
+      "num_relations": 16,
+      "num_canonical_edge_types": 27,
+      "weak_positive_levels": [
+        "high",
+        "critical"
+      ],
+      "weak_label_coverage": 1.0,
+      "weak_positive_rate_loss_nodes": 0.4091251790523529,
+      "gt_positive_rate_test_entity": 0.07039710879325867,
+      "loss_nodes": 2652,
+      "feature_stats": {
+        "log1p_columns": [
+          "feat_txn_amount_sum",
+          "feat_txn_count"
+        ],
+        "standardized_per_node_type": true,
+        "fit_on_split": "train",
+        "constant_columns_per_type": {
+          "domain": [
+            "feat_txn_count",
+            "feat_txn_amount_sum"
+          ],
+          "phone": [
+            "feat_txn_count",
+            "feat_txn_amount_sum",
+            "feat_kw_score"
+          ],
+          "bank_account": [
+            "feat_kw_score"
+          ],
+          "ewallet": [
+            "feat_kw_score"
+          ],
+          "apk": [
+            "feat_txn_count",
+            "feat_txn_amount_sum"
+          ],
+          "social_account": [
+            "feat_txn_count",
+            "feat_txn_amount_sum"
+          ],
+          "report": [
+            "feat_report_count",
+            "feat_txn_count",
+            "feat_txn_amount_sum",
+            "feat_kw_score"
+          ],
+          "victim": [
+            "feat_degree_in",
+            "feat_report_count",
+            "feat_kw_score"
+          ]
+        }
+      }
+    },
+    {
+      "seed": 46,
+      "elapsed_s": 41.714563599998655,
+      "num_nodes": 5000,
+      "num_edges_directed": 18187,
+      "num_edges_flat": 36374,
+      "num_relations": 16,
+      "num_canonical_edge_types": 27,
+      "weak_positive_levels": [
+        "high",
+        "critical"
+      ],
+      "weak_label_coverage": 1.0,
+      "weak_positive_rate_loss_nodes": 0.40938326716423035,
+      "gt_positive_rate_test_entity": 0.10769230872392654,
+      "loss_nodes": 2643,
+      "feature_stats": {
+        "log1p_columns": [
+          "feat_txn_amount_sum",
+          "feat_txn_count"
+        ],
+        "standardized_per_node_type": true,
+        "fit_on_split": "train",
+        "constant_columns_per_type": {
+          "domain": [
+            "feat_txn_count",
+            "feat_txn_amount_sum"
+          ],
+          "phone": [
+            "feat_txn_count",
+            "feat_txn_amount_sum",
+            "feat_kw_score"
+          ],
+          "bank_account": [
+            "feat_kw_score"
+          ],
+          "ewallet": [
+            "feat_kw_score"
+          ],
+          "apk": [
+            "feat_txn_count",
+            "feat_txn_amount_sum"
+          ],
+          "social_account": [
+            "feat_txn_count",
+            "feat_txn_amount_sum"
+          ],
+          "report": [
+            "feat_report_count",
+            "feat_txn_count",
+            "feat_txn_amount_sum",
+            "feat_kw_score"
+          ],
+          "victim": [
+            "feat_degree_in",
+            "feat_report_count",
+            "feat_kw_score"
+          ]
+        }
+      }
+    },
+    {
+      "seed": 47,
+      "elapsed_s": 49.78050110000186,
+      "num_nodes": 5000,
+      "num_edges_directed": 18218,
+      "num_edges_flat": 36436,
+      "num_relations": 16,
+      "num_canonical_edge_types": 27,
+      "weak_positive_levels": [
+        "high",
+        "critical"
+      ],
+      "weak_label_coverage": 1.0,
+      "weak_positive_rate_loss_nodes": 0.4086538553237915,
+      "gt_positive_rate_test_entity": 0.10326086729764938,
+      "loss_nodes": 2704,
+      "feature_stats": {
+        "log1p_columns": [
+          "feat_txn_amount_sum",
+          "feat_txn_count"
+        ],
+        "standardized_per_node_type": true,
+        "fit_on_split": "train",
+        "constant_columns_per_type": {
+          "domain": [
+            "feat_txn_count",
+            "feat_txn_amount_sum"
+          ],
+          "phone": [
+            "feat_txn_count",
+            "feat_txn_amount_sum",
+            "feat_kw_score"
+          ],
+          "bank_account": [
+            "feat_kw_score"
+          ],
+          "ewallet": [
+            "feat_kw_score"
+          ],
+          "apk": [
+            "feat_txn_count",
+            "feat_txn_amount_sum"
+          ],
+          "social_account": [
+            "feat_txn_count",
+            "feat_txn_amount_sum"
+          ],
+          "report": [
+            "feat_report_count",
+            "feat_txn_count",
+            "feat_txn_amount_sum",
+            "feat_kw_score"
+          ],
+          "victim": [
+            "feat_degree_in",
+            "feat_report_count",
+            "feat_kw_score"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+
+# Vite / TypeScript build artifacts
+*.tsbuildinfo
+
+# Compiled config artifacts (vite.config.ts is the source of truth)
+vite.config.js
+vite.config.d.ts
+
+# Local env
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store

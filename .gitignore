@@ -1,0 +1,56 @@
+__pycache__/
+*.py[cod]
+
+node_modules/
+dist/
+coverage/
+
+.env
+.env.*
+.venv/
+
+~$*.pptx
+*.pptx.bak
+
+# Keluaran generator: jangan commit CSV, tapi manifest.json tetap di-commit
+data/synthetic/**/*.csv
+!data/synthetic/**/manifest.json
+
+# Anotasi manual WAJIB di-commit. Berbeda dari CSV lain di folder ini, berkas
+# berikut bukan keluaran kode: ia hasil kerja tiga orang selama berjam-jam dan
+# tidak bisa dibuat ulang. Kehilangannya karena aturan gitignore akan mahal.
+# Setiap ronde anotasi punya folder anotasi_ronde{N}/ dengan pola yang sama;
+# tambahkan baris serupa untuk tiap ronde baru yang jawabannya sudah final.
+!data/synthetic/**/human_annotations.csv
+!data/synthetic/**/anotasi_ronde*/answers_*.csv
+
+# Lembar kerja anotator bisa dibuat ulang dari seed + kode, jadi tidak perlu
+# di-commit. Himpunan node yang dipakai tetap terkunci di sample_manifest.json,
+# dan `annotation.build merge` menolak jawaban yang menyimpang darinya.
+data/synthetic/**/anotasi_ronde*/worksheet_*.md
+
+# Skor per node, ~10 MB. Deterministik dan dapat dibuat ulang persis dengan
+# `python experiments/train.py --save-predictions`; berkas agregat di folder
+# yang sama tereproduksi byte-identik, jadi tidak ada yang hilang.
+experiments/results/predictions.csv
+
+# KUNCI JAWABAN. Memuat gt_illicit per node, dipakai koordinator untuk memilih
+# 5 kasus studi responden (SRS §9). Sengaja tidak masuk riwayat repo dan
+# sengaja tidak pernah masuk Neo4j: `GET /api/entities/...` mengembalikan node
+# apa adanya, jadi ground truth di sana akan terbaca responden dan membatalkan
+# validitas studi itu.
+integration/test_case_candidates.csv
+
+# Materi studi responden: ~1,3 MB per berkas karena gambar subgraph ditanam
+# base64 agar bisa dibuka tanpa server. Dapat dibangkitkan ulang persis dengan
+# `python integration/responder_study/build_materi.py`.
+#
+# Pola glob, bukan dua nama berkas: pernah ada berkas sisa
+# `materi_studi_varian_a.html` dari penamaan versi lama yang lolos dari daftar
+# eksplisit dan hampir ikut ter-commit sebagai blob 1,3 MB.
+integration/responder_study/materi_studi*.html
+
+# lembar_penilaian.csv WAJIB di-commit begitu terisi. Sama alasannya dengan
+# human_annotations.csv di atas: ia hasil kerja responden dan koordinator, dan
+# tidak dapat dibuat ulang oleh kode mana pun.
+!integration/responder_study/lembar_penilaian.csv

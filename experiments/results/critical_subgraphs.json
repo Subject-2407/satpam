@@ -1,0 +1,584 @@
+{
+  "seed": 42,
+  "model": "rgcn",
+  "subgraphs": {
+    "domain_00007": {
+      "nodes": [
+        "domain_00007",
+        "domain_00008",
+        "social_account_00468",
+        "apk_00183",
+        "social_account_00815",
+        "victim_00392",
+        "social_account_01300",
+        "report_00081",
+        "social_account_01289",
+        "report_00182",
+        "report_00509",
+        "domain_00243",
+        "ewallet_00006",
+        "domain_00524",
+        "phone_00070",
+        "domain_00478",
+        "report_00629",
+        "domain_00532",
+        "social_account_01053",
+        "domain_00508",
+        "social_account_00457",
+        "domain_00432",
+        "phone_00450"
+      ],
+      "edges": [
+        {
+          "src": "domain_00008",
+          "dst": "domain_00007",
+          "relType": "redirects_to",
+          "importance": 1.0
+        },
+        {
+          "src": "domain_00007",
+          "dst": "ewallet_00006",
+          "relType": "uses_account",
+          "importance": 0.2461
+        },
+        {
+          "src": "social_account_00468",
+          "dst": "domain_00524",
+          "relType": "promotes",
+          "importance": 0.2278
+        },
+        {
+          "src": "apk_00183",
+          "dst": "phone_00070",
+          "relType": "contacts",
+          "importance": 0.2248
+        },
+        {
+          "src": "social_account_00815",
+          "dst": "domain_00478",
+          "relType": "promotes",
+          "importance": 0.2241
+        },
+        {
+          "src": "victim_00392",
+          "dst": "report_00629",
+          "relType": "reported",
+          "importance": 0.2235
+        },
+        {
+          "src": "social_account_01300",
+          "dst": "domain_00532",
+          "relType": "promotes",
+          "importance": 0.2221
+        },
+        {
+          "src": "report_00081",
+          "dst": "social_account_01053",
+          "relType": "mentions",
+          "importance": 0.2209
+        },
+        {
+          "src": "social_account_01289",
+          "dst": "domain_00508",
+          "relType": "promotes",
+          "importance": 0.2206
+        },
+        {
+          "src": "report_00182",
+          "dst": "social_account_00457",
+          "relType": "mentions",
+          "importance": 0.2203
+        },
+        {
+          "src": "report_00509",
+          "dst": "domain_00432",
+          "relType": "mentions",
+          "importance": 0.2195
+        },
+        {
+          "src": "domain_00243",
+          "dst": "phone_00450",
+          "relType": "contacts",
+          "importance": 0.2189
+        }
+      ]
+    },
+    "ewallet_00030": {
+      "nodes": [
+        "ewallet_00030",
+        "domain_00035",
+        "domain_00036",
+        "bank_account_00094",
+        "bank_account_00089",
+        "report_00493",
+        "social_account_01169",
+        "report_00522",
+        "social_account_00257",
+        "phone_00201",
+        "ewallet_00194",
+        "bank_account_00023",
+        "ewallet_00031",
+        "bank_account_00178",
+        "ewallet_00331",
+        "bank_account_00001",
+        "domain_00540",
+        "ewallet_00173",
+        "apk_00156",
+        "ewallet_00420",
+        "ewallet_00084"
+      ],
+      "edges": [
+        {
+          "src": "ewallet_00030",
+          "dst": "bank_account_00023",
+          "relType": "transferred_to",
+          "importance": 1.0
+        },
+        {
+          "src": "ewallet_00030",
+          "dst": "ewallet_00031",
+          "relType": "transferred_to",
+          "importance": 0.8181
+        },
+        {
+          "src": "domain_00035",
+          "dst": "ewallet_00030",
+          "relType": "uses_account",
+          "importance": 0.5526
+        },
+        {
+          "src": "domain_00036",
+          "dst": "ewallet_00030",
+          "relType": "uses_account",
+          "importance": 0.5022
+        },
+        {
+          "src": "bank_account_00094",
+          "dst": "bank_account_00178",
+          "relType": "transferred_to",
+          "importance": 0.4987
+        },
+        {
+          "src": "bank_account_00089",
+          "dst": "ewallet_00331",
+          "relType": "transferred_to",
+          "importance": 0.4975
+        },
+        {
+          "src": "report_00493",
+          "dst": "bank_account_00001",
+          "relType": "mentions",
+          "importance": 0.4956
+        },
+        {
+          "src": "social_account_01169",
+          "dst": "domain_00540",
+          "relType": "promotes",
+          "importance": 0.4949
+        },
+        {
+          "src": "report_00522",
+          "dst": "ewallet_00173",
+          "relType": "mentions",
+          "importance": 0.4921
+        },
+        {
+          "src": "social_account_00257",
+          "dst": "apk_00156",
+          "relType": "linked_to_apk",
+          "importance": 0.4883
+        },
+        {
+          "src": "phone_00201",
+          "dst": "ewallet_00420",
+          "relType": "uses_account",
+          "importance": 0.4874
+        },
+        {
+          "src": "ewallet_00194",
+          "dst": "ewallet_00084",
+          "relType": "transferred_to",
+          "importance": 0.487
+        }
+      ]
+    },
+    "domain_00001": {
+      "nodes": [
+        "domain_00001",
+        "domain_00003",
+        "domain_00004",
+        "social_account_00006",
+        "social_account_00007",
+        "social_account_00009",
+        "report_00622",
+        "report_00297",
+        "social_account_00005",
+        "social_account_00066",
+        "social_account_00057",
+        "report_00059",
+        "social_account_01184",
+        "apk_00008",
+        "domain_00017",
+        "ewallet_00019",
+        "domain_00109"
+      ],
+      "edges": [
+        {
+          "src": "domain_00003",
+          "dst": "domain_00004",
+          "relType": "redirects_to",
+          "importance": 1.0
+        },
+        {
+          "src": "domain_00004",
+          "dst": "domain_00001",
+          "relType": "redirects_to",
+          "importance": 0.9559
+        },
+        {
+          "src": "social_account_00006",
+          "dst": "domain_00004",
+          "relType": "promotes",
+          "importance": 0.6871
+        },
+        {
+          "src": "social_account_00007",
+          "dst": "domain_00004",
+          "relType": "promotes",
+          "importance": 0.5737
+        },
+        {
+          "src": "social_account_00009",
+          "dst": "domain_00004",
+          "relType": "promotes",
+          "importance": 0.4667
+        },
+        {
+          "src": "report_00622",
+          "dst": "domain_00004",
+          "relType": "mentions",
+          "importance": 0.4155
+        },
+        {
+          "src": "report_00297",
+          "dst": "domain_00004",
+          "relType": "mentions",
+          "importance": 0.4068
+        },
+        {
+          "src": "social_account_00005",
+          "dst": "domain_00004",
+          "relType": "promotes",
+          "importance": 0.3764
+        },
+        {
+          "src": "social_account_00066",
+          "dst": "apk_00008",
+          "relType": "linked_to_apk",
+          "importance": 0.2775
+        },
+        {
+          "src": "social_account_00057",
+          "dst": "domain_00017",
+          "relType": "promotes",
+          "importance": 0.2747
+        },
+        {
+          "src": "report_00059",
+          "dst": "ewallet_00019",
+          "relType": "mentions",
+          "importance": 0.2726
+        },
+        {
+          "src": "social_account_01184",
+          "dst": "domain_00109",
+          "relType": "promotes",
+          "importance": 0.2717
+        }
+      ]
+    },
+    "social_account_00004": {
+      "nodes": [
+        "social_account_00004",
+        "phone_00001",
+        "social_account_00001",
+        "social_account_00002",
+        "domain_00003",
+        "social_account_00007",
+        "social_account_00009",
+        "ewallet_00002",
+        "bank_account_00002",
+        "bank_account_00001",
+        "ewallet_00003",
+        "domain_00004"
+      ],
+      "edges": [
+        {
+          "src": "phone_00001",
+          "dst": "ewallet_00002",
+          "relType": "uses_account",
+          "importance": 1.0
+        },
+        {
+          "src": "phone_00001",
+          "dst": "bank_account_00002",
+          "relType": "uses_account",
+          "importance": 0.9793
+        },
+        {
+          "src": "social_account_00004",
+          "dst": "domain_00003",
+          "relType": "promotes",
+          "importance": 0.9686
+        },
+        {
+          "src": "social_account_00004",
+          "dst": "phone_00001",
+          "relType": "contacts",
+          "importance": 0.9607
+        },
+        {
+          "src": "social_account_00001",
+          "dst": "phone_00001",
+          "relType": "contacts",
+          "importance": 0.9526
+        },
+        {
+          "src": "phone_00001",
+          "dst": "bank_account_00001",
+          "relType": "uses_account",
+          "importance": 0.9448
+        },
+        {
+          "src": "phone_00001",
+          "dst": "ewallet_00003",
+          "relType": "uses_account",
+          "importance": 0.9409
+        },
+        {
+          "src": "social_account_00002",
+          "dst": "domain_00003",
+          "relType": "promotes",
+          "importance": 0.9263
+        },
+        {
+          "src": "domain_00003",
+          "dst": "phone_00001",
+          "relType": "contacts",
+          "importance": 0.9247
+        },
+        {
+          "src": "domain_00003",
+          "dst": "domain_00004",
+          "relType": "redirects_to",
+          "importance": 0.923
+        },
+        {
+          "src": "social_account_00007",
+          "dst": "domain_00003",
+          "relType": "promotes",
+          "importance": 0.9055
+        },
+        {
+          "src": "social_account_00009",
+          "dst": "domain_00003",
+          "relType": "promotes",
+          "importance": 0.8978
+        }
+      ]
+    },
+    "bank_account_00013": {
+      "nodes": [
+        "bank_account_00013",
+        "victim_00310",
+        "victim_00285",
+        "ewallet_00018",
+        "victim_00213",
+        "victim_00346",
+        "victim_00476",
+        "victim_00331",
+        "victim_00336",
+        "victim_00466",
+        "ewallet_00034",
+        "bank_account_00014",
+        "ewallet_00030"
+      ],
+      "edges": [
+        {
+          "src": "victim_00310",
+          "dst": "bank_account_00013",
+          "relType": "transferred_to",
+          "importance": 1.0
+        },
+        {
+          "src": "victim_00285",
+          "dst": "bank_account_00013",
+          "relType": "transferred_to",
+          "importance": 0.9989
+        },
+        {
+          "src": "victim_00310",
+          "dst": "ewallet_00034",
+          "relType": "transferred_to",
+          "importance": 0.9923
+        },
+        {
+          "src": "ewallet_00018",
+          "dst": "bank_account_00014",
+          "relType": "transferred_to",
+          "importance": 0.9813
+        },
+        {
+          "src": "ewallet_00018",
+          "dst": "bank_account_00013",
+          "relType": "transferred_to",
+          "importance": 0.9766
+        },
+        {
+          "src": "victim_00213",
+          "dst": "bank_account_00013",
+          "relType": "transferred_to",
+          "importance": 0.9719
+        },
+        {
+          "src": "victim_00346",
+          "dst": "bank_account_00013",
+          "relType": "transferred_to",
+          "importance": 0.9673
+        },
+        {
+          "src": "victim_00476",
+          "dst": "bank_account_00013",
+          "relType": "transferred_to",
+          "importance": 0.9433
+        },
+        {
+          "src": "victim_00331",
+          "dst": "bank_account_00013",
+          "relType": "transferred_to",
+          "importance": 0.9425
+        },
+        {
+          "src": "victim_00336",
+          "dst": "bank_account_00013",
+          "relType": "transferred_to",
+          "importance": 0.9391
+        },
+        {
+          "src": "victim_00346",
+          "dst": "ewallet_00030",
+          "relType": "transferred_to",
+          "importance": 0.9292
+        },
+        {
+          "src": "victim_00466",
+          "dst": "bank_account_00014",
+          "relType": "transferred_to",
+          "importance": 0.9256
+        }
+      ]
+    },
+    "victim_00056": {
+      "nodes": [
+        "victim_00056",
+        "report_00316",
+        "report_00440",
+        "report_00546",
+        "social_account_01405",
+        "phone_00016",
+        "report_00636",
+        "social_account_00672",
+        "report_00212",
+        "ewallet_00206",
+        "report_00579",
+        "report_00344",
+        "ewallet_00030",
+        "domain_00554",
+        "domain_00696",
+        "social_account_01462",
+        "domain_00352",
+        "ewallet_00029",
+        "bank_account_00322",
+        "phone_00215",
+        "social_account_01418",
+        "bank_account_00286",
+        "domain_00059",
+        "ewallet_00320"
+      ],
+      "edges": [
+        {
+          "src": "victim_00056",
+          "dst": "ewallet_00030",
+          "relType": "transferred_to",
+          "importance": 1.0
+        },
+        {
+          "src": "report_00316",
+          "dst": "domain_00554",
+          "relType": "mentions",
+          "importance": 0.3131
+        },
+        {
+          "src": "report_00440",
+          "dst": "domain_00696",
+          "relType": "mentions",
+          "importance": 0.3067
+        },
+        {
+          "src": "report_00546",
+          "dst": "social_account_01462",
+          "relType": "mentions",
+          "importance": 0.3063
+        },
+        {
+          "src": "social_account_01405",
+          "dst": "domain_00352",
+          "relType": "promotes",
+          "importance": 0.3048
+        },
+        {
+          "src": "phone_00016",
+          "dst": "ewallet_00029",
+          "relType": "uses_account",
+          "importance": 0.3032
+        },
+        {
+          "src": "report_00636",
+          "dst": "bank_account_00322",
+          "relType": "mentions",
+          "importance": 0.3029
+        },
+        {
+          "src": "social_account_00672",
+          "dst": "phone_00215",
+          "relType": "contacts",
+          "importance": 0.3028
+        },
+        {
+          "src": "report_00212",
+          "dst": "social_account_01418",
+          "relType": "mentions",
+          "importance": 0.3027
+        },
+        {
+          "src": "ewallet_00206",
+          "dst": "bank_account_00286",
+          "relType": "transferred_to",
+          "importance": 0.3025
+        },
+        {
+          "src": "report_00579",
+          "dst": "domain_00059",
+          "relType": "mentions",
+          "importance": 0.3017
+        },
+        {
+          "src": "report_00344",
+          "dst": "ewallet_00320",
+          "relType": "mentions",
+          "importance": 0.3014
+        }
+      ]
+    }
+  }
+}

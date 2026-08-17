@@ -1,0 +1,57 @@
+{
+  "propagation": {
+    "n_annotations": 20,
+    "n_seed_nonzero": 20,
+    "n_reached": 1708,
+    "amplification": 85.4,
+    "max_abs_seed": 0.99,
+    "max_abs_score": 11.250411324771573,
+    "matrix_row_sum_max": 6.238677910202984,
+    "matrix_row_sum_mean": 0.917333151847736,
+    "normalize_by_degree": false,
+    "epsilon": 0.001,
+    "max_hops": 3
+  },
+  "delta_history": [
+    0.9861884956182065,
+    2.8493542348004937,
+    7.45105708997108
+  ],
+  "converged": false,
+  "hops_run": 3,
+  "supervision_a2": {
+    "n_direct": 20,
+    "n_direct_positive": 9,
+    "n_pseudo_before_override": 0,
+    "n_pseudo_overridden_by_direct": 0,
+    "n_supervised_total": 20,
+    "n_supervised_positive": 9,
+    "pseudo_threshold": 0.5,
+    "annotation_source": "fake_annotations.csv (majority)",
+    "dropped": {
+      "di_luar_urutan_manifest_tetap_dipakai": 19,
+      "node_tak_dikenal": 0,
+      "bukan_split_train": 0,
+      "bukan_tipe_entitas": 0
+    }
+  },
+  "supervision_a3": {
+    "n_direct": 20,
+    "n_direct_positive": 9,
+    "n_pseudo_before_override": 59,
+    "n_pseudo_overridden_by_direct": 18,
+    "n_supervised_total": 61,
+    "n_supervised_positive": 37,
+    "pseudo_threshold": 0.5,
+    "annotation_source": "fake_annotations.csv (majority)",
+    "dropped": {
+      "di_luar_urutan_manifest_tetap_dipakai": 19,
+      "node_tak_dikenal": 0,
+      "bukan_split_train": 0,
+      "bukan_tipe_entitas": 0
+    }
+  },
+  "seed": 42,
+  "annotation_source": "tests\\fixtures\\fake_annotations.csv",
+  "is_fixture": true
+}

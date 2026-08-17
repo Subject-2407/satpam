@@ -1,0 +1,15 @@
+# Dependensi Bagian C (sistem). Terpisah dari requirements.txt akar, yang hanya
+# memuat pustaka ML Bagian B — restrukturisasi v2 melepas dependensi backend
+# dari sana.
+#
+#   pip install -r integration/requirements.txt
+#
+# Backend punya daftar lengkapnya sendiri di integration/backend/requirements.txt
+# (dipakai Dockerfile). Berkas ini adalah yang dibutuhkan skrip di integration/
+# saat dijalankan di luar container.
+
+httpx>=0.27.0
+pandas>=2.0.0
+
+# Hanya bila backend dijalankan langsung dengan uvicorn, tanpa Docker.
+neo4j>=5.20.0

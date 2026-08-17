@@ -1,0 +1,56 @@
+{
+  "propagation": {
+    "n_annotations": 103,
+    "n_seed_nonzero": 103,
+    "n_reached": 539,
+    "amplification": 5.233009708737864,
+    "max_abs_seed": 0.9,
+    "max_abs_score": 1.2271724973635838,
+    "matrix_row_sum_max": 6.238677910202984,
+    "matrix_row_sum_mean": 0.917333151847736,
+    "normalize_by_degree": false,
+    "epsilon": 0.001,
+    "max_hops": 1
+  },
+  "delta_history": [
+    0.9693746336936215
+  ],
+  "converged": false,
+  "hops_run": 1,
+  "supervision_a2": {
+    "n_direct": 103,
+    "n_direct_positive": 21,
+    "n_pseudo_before_override": 0,
+    "n_pseudo_overridden_by_direct": 0,
+    "n_supervised_total": 103,
+    "n_supervised_positive": 21,
+    "pseudo_threshold": 0.5,
+    "annotation_source": "human_annotations_majority_ronde2.csv (majority)",
+    "dropped": {
+      "di_luar_urutan_manifest_tetap_dipakai": 0,
+      "node_tak_dikenal": 0,
+      "bukan_split_train": 47,
+      "bukan_tipe_entitas": 0
+    }
+  },
+  "supervision_a3": {
+    "n_direct": 103,
+    "n_direct_positive": 21,
+    "n_pseudo_before_override": 109,
+    "n_pseudo_overridden_by_direct": 101,
+    "n_supervised_total": 111,
+    "n_supervised_positive": 23,
+    "pseudo_threshold": 0.5,
+    "annotation_source": "human_annotations_majority_ronde2.csv (majority)",
+    "dropped": {
+      "di_luar_urutan_manifest_tetap_dipakai": 0,
+      "node_tak_dikenal": 0,
+      "bukan_split_train": 47,
+      "bukan_tipe_entitas": 0
+    }
+  },
+  "seed": 42,
+  "annotation_source": "data\\synthetic\\seed_42\\human_annotations_majority_ronde2.csv",
+  "annotation_manifest": "data\\synthetic\\seed_42\\ronde2\\sample_manifest.json",
+  "is_fixture": false
+}

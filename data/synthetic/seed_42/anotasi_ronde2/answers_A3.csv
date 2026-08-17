@@ -1,0 +1,151 @@
+node_id,annotator_id,label,confidence,annotated_at,note
+social_account_00971,A3,0,0.7,2026-08-14T10:29:42Z,
+bank_account_00087,A3,0,0.7,2026-08-14T10:44:51Z,
+social_account_00083,A3,0,0.7,2026-08-14T10:45:14Z,
+social_account_00848,A3,0,0.7,2026-08-14T10:46:33Z,
+bank_account_00317,A3,0,0.7,2026-08-14T10:47:05Z,
+social_account_01380,A3,0,0.7,2026-08-14T10:48:44Z,
+phone_00274,A3,0,0.7,2026-08-14T10:50:23Z,
+social_account_01304,A3,0,0.7,2026-08-14T10:51:15Z,
+bank_account_00439,A3,1,0.7,2026-08-14T10:52:55Z,Jejak pada entitas ini sendiri; Lainnya (jelaskan di catatan) -- ada 1 victim yang kemuningkan terhubung
+social_account_00547,A3,1,0.5,2026-08-14T10:54:39Z,Jejak pada entitas ini sendiri
+bank_account_00350,A3,0,0.5,2026-08-14T10:56:18Z,
+social_account_00436,A3,0,0.5,2026-08-14T10:57:18Z,
+apk_00141,A3,0,0.5,2026-08-14T10:58:59Z,
+bank_account_00152,A3,1,0.7,2026-08-14T11:00:29Z,Jejak pada entitas ini sendiri
+social_account_00279,A3,0,0.5,2026-08-14T11:01:27Z,
+social_account_00779,A3,0,0.5,2026-08-14T11:02:12Z,
+phone_00136,A3,0,0.5,2026-08-14T11:02:48Z,
+domain_00416,A3,1,0.3,2026-08-14T11:06:01Z,Pola tetangga langsung
+bank_account_00305,A3,1,0.5,2026-08-14T11:06:57Z,Pola transaksi atau nominal; Umur atau pola kemunculan
+social_account_00551,A3,0,0.7,2026-08-14T11:08:35Z,
+ewallet_00370,A3,0,0.7,2026-08-14T11:09:12Z,
+ewallet_00281,A3,1,0.5,2026-08-14T11:10:23Z,Pola transaksi atau nominal; Aliran dana dari node korban; Umur atau pola kemunculan; Pola tetangga langsung
+phone_00106,A3,0,0.9,2026-08-14T11:11:08Z,
+bank_account_00047,A3,1,0.7,2026-08-14T11:12:04Z,Pola tetangga langsung; Aliran dana dari node korban; Pola transaksi atau nominal; Umur atau pola kemunculan
+domain_00670,A3,0,0.5,2026-08-14T11:13:29Z,
+phone_00214,A3,0,0.5,2026-08-14T11:14:14Z,
+apk_00154,A3,0,0.7,2026-08-14T11:23:36Z,
+social_account_00901,A3,0,0.7,2026-08-14T11:23:43Z,
+ewallet_00116,A3,0,0.5,2026-08-14T11:26:05Z,
+phone_00336,A3,0,0.5,2026-08-14T11:27:12Z,
+bank_account_00059,A3,0,0.5,2026-08-14T11:28:37Z,
+domain_00013,A3,1,0.5,2026-08-14T11:32:54Z,Lainnya (jelaskan di catatan); Pola tetangga langsung -- ada pola pengalihan domain juga
+bank_account_00200,A3,0,0.5,2026-08-14T11:39:34Z,
+phone_00020,A3,0,0.5,2026-08-14T11:41:25Z,
+domain_00042,A3,0,0.5,2026-08-14T11:41:28Z,
+bank_account_00181,A3,0,0.7,2026-08-14T11:42:48Z,
+domain_00007,A3,1,0.7,2026-08-14T11:43:19Z,Pola tetangga langsung; Jejak pada entitas ini sendiri
+ewallet_00090,A3,0,0.5,2026-08-14T11:43:48Z,w victim masih meragukan
+bank_account_00449,A3,1,0.5,2026-08-14T11:44:27Z,Pola transaksi atau nominal; Pola tetangga langsung
+phone_00472,A3,0,0.7,2026-08-14T11:46:34Z,
+social_account_00069,A3,1,0.5,2026-08-14T11:47:20Z,Jejak pada entitas ini sendiri
+social_account_01105,A3,0,0.5,2026-08-14T11:48:06Z,
+social_account_01149,A3,0,0.7,2026-08-14T11:49:48Z,
+social_account_00525,A3,0,0.7,2026-08-14T11:49:54Z,
+social_account_00012,A3,0,0.5,2026-08-14T11:50:20Z,
+apk_00066,A3,0,0.7,2026-08-14T11:50:28Z,
+domain_00323,A3,0,0.7,2026-08-14T11:50:43Z,
+ewallet_00114,A3,0,0.5,2026-08-14T11:51:11Z,
+apk_00101,A3,1,0.7,2026-08-14T11:51:26Z,Pola tetangga langsung; Jejak pada entitas ini sendiri
+social_account_01461,A3,0,0.7,2026-08-14T11:51:45Z,
+ewallet_00178,A3,1,0.5,2026-08-14T11:54:12Z,Jejak pada entitas ini sendiri; Pola tetangga langsung; Pola transaksi atau nominal
+ewallet_00441,A3,0,0.5,2026-08-14T11:54:38Z,
+social_account_00192,A3,0,0.7,2026-08-14T11:55:40Z,
+domain_00534,A3,0,0.7,2026-08-14T11:55:47Z,
+social_account_00656,A3,0,0.7,2026-08-14T11:56:40Z,
+apk_00166,A3,0,0.7,2026-08-14T11:56:46Z,
+social_account_00504,A3,0,0.7,2026-08-14T11:56:50Z,
+social_account_00262,A3,0,0.7,2026-08-14T11:56:56Z,
+social_account_00920,A3,0,0.7,2026-08-14T11:57:02Z,
+social_account_00569,A3,0,0.7,2026-08-14T11:57:05Z,
+social_account_01459,A3,0,0.7,2026-08-14T11:57:08Z,
+domain_00247,A3,0,0.5,2026-08-14T11:57:46Z,
+social_account_01210,A3,0,0.7,2026-08-14T11:57:52Z,
+domain_00355,A3,0,0.7,2026-08-14T11:58:04Z,
+phone_00241,A3,0,0.5,2026-08-14T11:59:18Z,
+domain_00036,A3,1,0.7,2026-08-14T12:00:08Z,Jejak pada entitas ini sendiri; Pola tetangga langsung -- ada pola mengalihkan
+phone_00258,A3,1,0.7,2026-08-14T12:00:30Z,Pola tetangga langsung; Jejak pada entitas ini sendiri
+domain_00027,A3,0,0.3,2026-08-14T12:00:49Z,
+domain_00016,A3,1,0.7,2026-08-14T12:01:14Z,Pola tetangga langsung; Jejak pada entitas ini sendiri
+phone_00187,A3,0,0.5,2026-08-14T12:01:43Z,
+social_account_00189,A3,0,0.7,2026-08-14T12:01:47Z,
+domain_00334,A3,0,0.5,2026-08-14T12:02:10Z,
+bank_account_00039,A3,0,0.7,2026-08-14T12:02:31Z,
+social_account_01081,A3,0,0.7,2026-08-14T12:03:24Z,
+social_account_01110,A3,0,0.7,2026-08-14T12:03:32Z,
+social_account_01044,A3,0,0.7,2026-08-14T12:03:49Z,
+bank_account_00352,A3,1,0.5,2026-08-14T12:04:16Z,Aliran dana dari node korban; Jejak pada entitas ini sendiri; Pola tetangga langsung
+social_account_00468,A3,0,0.7,2026-08-14T12:04:33Z,
+apk_00099,A3,1,0.5,2026-08-14T16:02:26Z,Jejak pada entitas ini sendiri
+social_account_01384,A3,0,0.5,2026-08-14T16:03:01Z,
+domain_00452,A3,0,0.5,2026-08-14T16:05:59Z,
+bank_account_00013,A3,1,0.9,2026-08-14T16:06:12Z,Aliran dana dari node korban; Jejak pada entitas ini sendiri; Pola transaksi atau nominal
+phone_00198,A3,1,0.5,2026-08-14T16:11:46Z,Pola tetangga langsung
+phone_00144,A3,0,0.5,2026-08-14T16:15:19Z,
+domain_00576,A3,0,0.5,2026-08-14T16:15:41Z,
+ewallet_00256,A3,1,0.5,2026-08-14T16:16:48Z,Jejak pada entitas ini sendiri; Pola tetangga langsung; Umur atau pola kemunculan
+social_account_01197,A3,0,0.5,2026-08-14T16:17:15Z,
+social_account_01129,A3,0,0.5,2026-08-14T16:17:23Z,
+social_account_01191,A3,0,0.5,2026-08-14T16:17:32Z,
+domain_00215,A3,0,0.7,2026-08-14T16:17:56Z,
+phone_00133,A3,0,0.5,2026-08-14T16:18:15Z,
+domain_00522,A3,0,0.5,2026-08-14T16:19:27Z,
+bank_account_00136,A3,1,0.7,2026-08-14T16:20:03Z,Pola tetangga langsung; Pola transaksi atau nominal; Aliran dana dari node korban
+social_account_00343,A3,0,0.7,2026-08-14T16:20:10Z,
+social_account_00728,A3,0,0.7,2026-08-14T16:20:35Z,
+phone_00364,A3,0,0.5,2026-08-14T16:22:28Z,
+social_account_00780,A3,0,0.7,2026-08-14T16:22:34Z,
+social_account_00827,A3,0,0.5,2026-08-14T16:22:44Z,
+domain_00263,A3,1,0.5,2026-08-14T16:23:19Z,Pola tetangga langsung; Jejak pada entitas ini sendiri
+phone_00430,A3,1,0.5,2026-08-14T16:25:11Z,Jejak pada entitas ini sendiri; Pola tetangga langsung
+domain_00336,A3,0,0.7,2026-08-14T16:25:35Z,
+domain_00652,A3,1,0.5,2026-08-14T16:29:30Z,Pola tetangga langsung
+domain_00663,A3,1,0.7,2026-08-14T16:54:35Z,Pola tetangga langsung -- ada pola mengalihkan
+social_account_01076,A3,0,0.7,2026-08-14T16:56:12Z,
+ewallet_00246,A3,1,0.9,2026-08-14T16:56:34Z,Aliran dana dari node korban; Pola transaksi atau nominal; Jejak pada entitas ini sendiri; Pola tetangga langsung
+bank_account_00120,A3,1,0.5,2026-08-14T16:56:59Z,Pola transaksi atau nominal; Aliran dana dari node korban; Jejak pada entitas ini sendiri; Umur atau pola kemunculan; Pola tetangga langsung
+ewallet_00356,A3,1,0.7,2026-08-14T16:57:28Z,Jejak pada entitas ini sendiri; Pola tetangga langsung; Pola transaksi atau nominal; Aliran dana dari node korban
+social_account_01410,A3,0,0.5,2026-08-14T16:57:40Z,
+social_account_00286,A3,0,0.5,2026-08-14T16:57:49Z,
+bank_account_00394,A3,0,0.5,2026-08-14T16:58:51Z,
+social_account_00890,A3,0,0.7,2026-08-14T16:59:05Z,
+ewallet_00018,A3,1,0.7,2026-08-14T16:59:19Z,Jejak pada entitas ini sendiri; Pola tetangga langsung; Pola transaksi atau nominal; Aliran dana dari node korban
+phone_00070,A3,0,0.5,2026-08-14T17:00:23Z,
+ewallet_00365,A3,0,0.7,2026-08-14T17:00:52Z,
+social_account_01339,A3,0,0.7,2026-08-14T17:01:01Z,
+apk_00033,A3,0,0.5,2026-08-14T17:01:45Z,
+bank_account_00038,A3,0,0.7,2026-08-14T17:02:23Z,
+ewallet_00353,A3,1,0.7,2026-08-14T17:02:37Z,Pola transaksi atau nominal; Jejak pada entitas ini sendiri; Aliran dana dari node korban
+social_account_00713,A3,0,0.5,2026-08-14T17:03:00Z,
+bank_account_00178,A3,0,0.7,2026-08-14T17:03:25Z,
+ewallet_00157,A3,0,0.5,2026-08-14T17:05:29Z,
+ewallet_00217,A3,0,0.7,2026-08-14T17:05:46Z,
+social_account_01265,A3,0,0.7,2026-08-14T17:05:56Z,
+social_account_00102,A3,1,0.5,2026-08-14T17:08:54Z,Jejak pada entitas ini sendiri; Pola tetangga langsung
+domain_00565,A3,0,0.7,2026-08-14T17:10:25Z,
+bank_account_00011,A3,1,0.9,2026-08-14T17:10:35Z,Pola tetangga langsung; Aliran dana dari node korban; Pola transaksi atau nominal; Jejak pada entitas ini sendiri
+ewallet_00101,A3,1,0.5,2026-08-14T17:11:26Z,Aliran dana dari node korban
+domain_00025,A3,0,0.5,2026-08-14T17:22:42Z,
+phone_00226,A3,0,0.5,2026-08-14T17:23:07Z,
+social_account_00054,A3,0,0.7,2026-08-14T17:23:14Z,
+social_account_00416,A3,0,0.7,2026-08-14T17:23:23Z,
+apk_00015,A3,0,0.7,2026-08-14T17:23:48Z,
+social_account_00448,A3,0,0.5,2026-08-14T17:23:58Z,
+ewallet_00038,A3,1,0.9,2026-08-14T17:24:26Z,Aliran dana dari node korban; Pola transaksi atau nominal; Pola tetangga langsung; Jejak pada entitas ini sendiri
+social_account_01358,A3,0,0.7,2026-08-14T17:25:06Z,
+bank_account_00030,A3,1,0.9,2026-08-14T17:25:15Z,Pola tetangga langsung; Pola transaksi atau nominal; Jejak pada entitas ini sendiri; Aliran dana dari node korban
+ewallet_00061,A3,1,0.7,2026-08-14T17:26:02Z,Pola tetangga langsung; Pola transaksi atau nominal; Jejak pada entitas ini sendiri
+social_account_00503,A3,0,0.7,2026-08-14T17:26:16Z,
+social_account_00308,A3,0,0.5,2026-08-14T17:26:29Z,
+social_account_00853,A3,0,0.7,2026-08-14T17:26:34Z,
+social_account_00138,A3,0,0.7,2026-08-14T17:26:38Z,
+social_account_00607,A3,0,0.7,2026-08-14T17:26:44Z,
+ewallet_00013,A3,1,0.9,2026-08-14T17:27:06Z,Aliran dana dari node korban; Pola tetangga langsung; Jejak pada entitas ini sendiri
+bank_account_00422,A3,0,0.7,2026-08-14T17:27:21Z,
+social_account_00985,A3,0,0.7,2026-08-14T17:27:29Z,
+domain_00054,A3,0,0.5,2026-08-14T17:27:59Z,
+social_account_00943,A3,0,0.5,2026-08-14T17:28:09Z,
+social_account_00906,A3,0,0.7,2026-08-14T17:28:16Z,
+domain_00402,A3,0,0.7,2026-08-14T17:28:20Z,
+bank_account_00018,A3,1,0.5,2026-08-14T17:28:39Z,Pola transaksi atau nominal; Aliran dana dari node korban

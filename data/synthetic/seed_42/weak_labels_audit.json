@@ -1,0 +1,142 @@
+{
+  "rules_version": "1.0.0",
+  "adapted_from": "src-old/backend/app/services/ai_engine/scoring.py (SATPAM v1.0, ditulis sebelum generator ada)",
+  "tiers_active": [
+    "srs_6_3",
+    "legacy"
+  ],
+  "max_depth": 1,
+  "inherited_from_v1": {
+    "score_cap": 100,
+    "level_thresholds": {
+      "critical": 80,
+      "high": 60,
+      "medium": 35
+    },
+    "context_limit": 250,
+    "count_floors": {
+      "R-009": 2,
+      "R-003": 3,
+      "R-015": 4
+    }
+  },
+  "changed_from_v1": {
+    "context_max_depth": {
+      "v1": 2,
+      "here": 1,
+      "reason": "graph v1.0 berisi 10-80 entitas per tipe; pada 5.000 node konteks 2-hop membuat 89,6% node menjadi critical dan aturannya berhenti membedakan apa pun. Dipilih dengan kriteria bebas ground truth (sebaran level tidak degenerate)"
+    }
+  },
+  "calibrated_thresholds": {
+    "g1_mean_ticket": 115982.53002604167,
+    "g1_txn_count": 130.0,
+    "g2_dormant_gap_days": 96.50609143518518,
+    "g2_layering_sources": 10.0,
+    "g3_merchant_users": 4.0,
+    "g5_promoted": 3.0,
+    "g5_promoters": 5.0,
+    "g6_phone_domains": 3.0,
+    "g7_bridged_groups": 2.0,
+    "g8_victim_payers": 2.0,
+    "x1_report_count": 3.0,
+    "x2_degree": 15.0
+  },
+  "rules": {
+    "R-G1": {
+      "title": "Kanal QRIS dengan frekuensi tinggi dan nominal kecil",
+      "weight": 25,
+      "srs_6_3_row": "G1",
+      "citation": "PPATK, 23 Juli 2026",
+      "legacy_rule": "R-013",
+      "tier": "srs_6_3",
+      "nodes_matched": 12
+    },
+    "R-G2": {
+      "title": "Rekening penampung: jurang dormant atau pola berlapis",
+      "weight": 20,
+      "srs_6_3_row": "G2",
+      "citation": "PPATK",
+      "legacy_rule": "R-008",
+      "tier": "srs_6_3",
+      "nodes_matched": 45
+    },
+    "R-G3": {
+      "title": "Merchant QRIS dipakai beberapa pihak berbeda",
+      "weight": 20,
+      "srs_6_3_row": "G3",
+      "citation": "PPATK, 23 Juli 2026",
+      "legacy_rule": "R-004",
+      "tier": "srs_6_3",
+      "nodes_matched": 55
+    },
+    "R-G4": {
+      "title": "Domain berada dalam rantai pengalihan",
+      "weight": 15,
+      "srs_6_3_row": "G4",
+      "citation": "Komdigi/TrustPositif",
+      "legacy_rule": "R-012",
+      "tier": "srs_6_3",
+      "nodes_matched": 220
+    },
+    "R-G5": {
+      "title": "Promosi terpusat oleh banyak akun media sosial",
+      "weight": 20,
+      "srs_6_3_row": "G5",
+      "citation": "Komdigi-Meta",
+      "legacy_rule": "R-009",
+      "tier": "srs_6_3",
+      "nodes_matched": 644
+    },
+    "R-G6": {
+      "title": "Satu nomor kontak dipakai lintas beberapa domain",
+      "weight": 25,
+      "srs_6_3_row": "G6",
+      "citation": "PPATK",
+      "legacy_rule": "R-003",
+      "tier": "srs_6_3",
+      "nodes_matched": 109
+    },
+    "R-G7": {
+      "title": "Infrastruktur menjembatani dua gugus domain terpisah",
+      "weight": 20,
+      "srs_6_3_row": "G7",
+      "citation": "Menkominfo 13 Juni 2024, dibatasi PPATK Oktober 2023",
+      "legacy_rule": "R-010",
+      "tier": "srs_6_3",
+      "nodes_matched": 128
+    },
+    "R-G8": {
+      "title": "Rekening menerima setoran dari beberapa korban berbeda",
+      "weight": 25,
+      "srs_6_3_row": "G8",
+      "citation": "PPATK (Natsir Kongah)",
+      "legacy_rule": "R-004",
+      "tier": "srs_6_3",
+      "nodes_matched": 150
+    },
+    "R-X1": {
+      "title": "Entitas banyak disebut laporan masuk",
+      "weight": 25,
+      "srs_6_3_row": null,
+      "citation": "TIDAK ada baris di SRS §6.3. Provenance: kolom feat_report_count (SRS §5.3) dan praktik penanganan laporan IASC/Satgas PASTI yang dikutip SRS §3.1; aturan padanan R-003 sistem v1.0",
+      "legacy_rule": "R-003",
+      "tier": "legacy",
+      "nodes_matched": 337
+    },
+    "R-X2": {
+      "title": "Node sangat sentral pada graph",
+      "weight": 10,
+      "srs_6_3_row": null,
+      "citation": "TIDAK ada baris di SRS §6.3. Provenance: aturan R-015 sistem v1.0 dan kolom feat_degree_in/out (SRS §5.3)",
+      "legacy_rule": "R-015",
+      "tier": "legacy",
+      "nodes_matched": 504
+    }
+  },
+  "level_distribution": {
+    "medium": 1428,
+    "critical": 1276,
+    "high": 826,
+    "low": 1470
+  }
+}
